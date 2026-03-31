@@ -1,0 +1,42 @@
+Webentwicklungsprojekt_NextGen-Labs/
+├─ src/
+│  ├─ api/
+│  │  ├─ users/
+│  │  │  ├─ index.php
+│  │  │  ├─ create.php
+│  │  │  ├─ update.php
+│  │  │  └─ delete.php
+│  │  └─ auth/
+│  │     └─ login.php
+│  │
+│  ├─ assets/
+│  │  ├─ css/
+│  │  │  └─ style.css
+│  │  ├─ js/
+│  │  │  ├─ app.js
+│  │  │  └─ users.js
+│  │  └─ img/
+│  │
+│  ├─ includes/
+│  │  ├─ db.php
+│  │  ├─ config.php
+│  │  ├─ helpers.php
+│  │  ├─ header.php
+│  │  └─ footer.php
+│  │
+│  ├─ pages/
+│  │  ├─ home.php
+│  │  ├─ users.php
+│  │  └─ dashboard.php
+│  │
+│  ├─ index.php
+│  └─ .htaccess
+│
+├─ database/
+│  ├─ init.sql
+│  └─ seed.sql
+│
+├─ Dockerfile
+├─ compose.yaml
+├─ .gitignore
+└─ README.md

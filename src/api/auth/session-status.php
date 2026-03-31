@@ -1,0 +1,1 @@
+<!-- für Session-Status-Abfragen, um zb namen in nav anzuzeigen-->
