@@ -10,6 +10,8 @@ integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbIT
 <script src="/../assets/js/auth/auth_validation.js"></script>
 <script src="/../assets/js/auth/auth_ui.js"></script>
 <script src="/../assets/js/auth/auth_actions.js"></script>
+<script src="/../assets/js/courses/courses.js"></script>
+<script src="/../assets/js/courses/courses_categories.js"></script>
 
 </body>
 </html>

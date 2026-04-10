@@ -4,6 +4,7 @@
     <?php include __DIR__ . '/../partials/nav_user_area.php'; ?>
   </div>
 </nav>
+
 <?php include __DIR__ . '/../ui/alerts.php'; ?>
 <?php include __DIR__ . '/../modals/login_modal.php'; ?>
 <?php include __DIR__ . '/../modals/register_modal.php'; ?>

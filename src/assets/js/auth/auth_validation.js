@@ -50,6 +50,9 @@ $(document).on('click', '#login-submit-button-modal', function() {
             
             console.log(data.message);
 
+            const categoryId = $('#category-select').val();
+            loadCourses(categoryId);
+
         } else if (data.success == false) {
 
             showAuthAlert(data.message, 'danger');
@@ -212,6 +215,10 @@ $(document).on('click', '#logout-button-nav', function() {
             reloadUserArea();
 
             console.log(data.message);
+
+            const categoryId = $('#category-select').val();
+            loadCourses(categoryId);
+
         } else if (data.success == false) {
 
             showAuthAlert(data.message, 'danger');
