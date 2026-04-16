@@ -53,6 +53,9 @@ $(document).on('click', '#login-submit-button-modal', function() {
             const categoryId = $('#category-select').val();
             loadCourses(categoryId);
 
+            const courseId = $('#course-details').data('course-id');
+            loadCourseDetails(courseId)
+
         } else if (data.success == false) {
 
             showAuthAlert(data.message, 'danger');
@@ -218,6 +221,9 @@ $(document).on('click', '#logout-button-nav', function() {
 
             const categoryId = $('#category-select').val();
             loadCourses(categoryId);
+
+            const courseId = $('#course-details').data('course-id');
+            loadCourseDetails(courseId)
 
         } else if (data.success == false) {
 

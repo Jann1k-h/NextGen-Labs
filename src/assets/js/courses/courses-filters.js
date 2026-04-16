@@ -21,12 +21,20 @@ function loadCoursesCategories() {
 }
 
 $(document).on('change', '#category-select', function() {
-
-  const categoryId = $(this).val();
-
-  // Funktion ist ist in coureses.js
-  loadCourses(categoryId);
-
-  console.log('Selected category ID: ' + categoryId);
-
+  triggerCourseReload();
 });
+
+$(document).on('change', '#free-courses-checkbox', function() {
+  triggerCourseReload();
+});
+
+function triggerCourseReload() {
+  const categoryId = $('#category-select').val();
+  const onlyFree = $('#free-courses-checkbox').is(':checked');
+
+  console.log('Category:', categoryId);
+  console.log('Only free:', onlyFree);
+
+  // Funktion ist ist in courses.js
+  loadCourses(categoryId, onlyFree);
+}

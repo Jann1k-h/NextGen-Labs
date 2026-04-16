@@ -7,11 +7,12 @@ integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U=" crossorigin="ano
 integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
 <!-- Eigenes JS -->
-<script src="/../assets/js/auth/auth_validation.js"></script>
-<script src="/../assets/js/auth/auth_ui.js"></script>
-<script src="/../assets/js/auth/auth_actions.js"></script>
+<script src="/../assets/js/auth/auth-validation.js"></script>
+<script src="/../assets/js/auth/auth-ui.js"></script>
+<script src="/../assets/js/auth/auth-actions.js"></script>
 <script src="/../assets/js/courses/courses.js"></script>
-<script src="/../assets/js/courses/courses_categories.js"></script>
+<script src="/../assets/js/courses/courses-filters.js"></script>
+<script src="/../assets/js/courses/course-details.js"></script>
 
 </body>
 </html>

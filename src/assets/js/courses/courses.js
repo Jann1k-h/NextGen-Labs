@@ -1,12 +1,9 @@
-function loadCourses(categoryId = '') {
+document.addEventListener("DOMContentLoaded", () => {
+  loadCourses();
+});
 
-  let url = '/api/courses/get_courses.php';
-
-  if (categoryId) {
-      url += '?category_id=' + categoryId;
-  }
-
-  fetch(url)
+function loadCourses(categoryId = '', onlyFree = false) {
+  fetch(`/api/courses/get_courses.php?category_id=${categoryId}&free=${onlyFree}`)
     .then(res => res.json())
     .then(data => {
       console.log(data);
@@ -61,7 +58,7 @@ function loadCourses(categoryId = '') {
                 </div>
 
                 <!-- Button -->
-                <a href="/course/${course.id}" 
+                <a href="course_details.php?id=${course.id}" target="_blank" 
                   class="btn btn-primary w-100 mt-auto rounded-pill">
                   Zum Kurs
                 </a>
@@ -75,7 +72,3 @@ function loadCourses(categoryId = '') {
   });
 
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  loadCourses();
-});

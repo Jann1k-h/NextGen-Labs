@@ -12,12 +12,15 @@
       </div>
 
       <div class="d-flex flex-column flex-md-row gap-2 w-100 w-lg-auto">
+
         <div class="flex-grow-1">
           <?php include __DIR__ . '/../partials/courses_search.php'; ?>
         </div>
+
         <div>
-          <?php include __DIR__ . '/../partials/courses_categories.php'; ?>
+          <?php include __DIR__ . '/../partials/courses_filters.php'; ?>
         </div>
+        
       </div>
 
     </div>

@@ -1,14 +1,9 @@
 <?php
-
 include_once __DIR__ . '/../../includes/core/dbaccess.php';
 include_once __DIR__ . '/../../includes/core/session.php';
 
-header("Content-Type: application/json");
-
 $isLoggedIn = isset($_SESSION['user_id']);
-$categoryId = $_GET['category_id'] ?? null;
-$onlyFree = $_GET['free'];
-
+$course_id = $_GET['id'] ?? null;
 
 try {
 
@@ -20,6 +15,7 @@ try {
         SELECT
             courses.id,
             courses.title,
+            courses.description,
             courses.price,
             courses.rating,
             courses.stock,
@@ -38,62 +34,53 @@ try {
     }
     
     $sql .= "
+            courses.created_at,
+            courses.updated_at,
+
             categories.name AS category_name,
+            categories.description AS category_description,
+
             course_images.image_path AS course_image,
             course_images.alt_text AS course_image_alt
+
         FROM courses
         JOIN categories ON courses.category_id = categories.id
         LEFT JOIN course_images ON courses.id = course_images.course_id
         WHERE courses.is_active = 1
+        AND courses.id = :id
     ";
-
-    if ($categoryId !== null && $categoryId !== '') {
-        $sql .= " AND courses.category_id = :category_id";
-    }
-
-    if ($onlyFree == 'true') {
-        $sql .= " AND courses.stock > 0";
-    }
 
     // Folgenden SQL-Befehl ausführen
     $stmt = $pdo->prepare($sql);
 
-    // SQL-Befehl ausführen in Abhängigkeit davon, ob eine Kategorie ausgewählt wurde oder nicht
-    if ($categoryId !== null && $categoryId !== '') {
-        $stmt->execute([
-            'category_id' => $categoryId
-        ]);
-    } else {
-        $stmt->execute();
-    }
 
+    // SQL-Befehl ausführen
+    $stmt->execute(['id' => $course_id]);
 
-    // Alle Kurse als Array zurückgeben
+    //Einen Kurs als Array zurückgeben
     //    [
     //[
     //    "id" => 1,
-    //    "title" => "Java Kurs",
-    //    "price" => "99.00",
-    //    "rating" => "4.5"
-    //    "stock" => 10,
-    //    Wenn $isLoggedIn true ist:
-    //    "lecturer_name" => "Max Mustermann",
-    //    "lecturer_contact" => "max.mustermann@example.com",
-    //
-    //    "category_name" => "Programmierung"
-    //    "course_image" => "path/to/image.jpg"
-    //    "course_image_alt" => "Alternativer Text für das Kursbild"
+    //    "name" => "Programmierung"
     //],
     //...
     //]
-    $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode($courses);
+    $course = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$course) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Kurs nicht gefunden'
+        ]);
+        exit;
+    }
+
+    echo json_encode($course);
 
 } catch (PDOException $e) {
     echo json_encode([
         'success' => false,
         'message' => 'DB-Fehler'
     ]);
-    exit;
 }
