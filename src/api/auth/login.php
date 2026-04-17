@@ -105,6 +105,7 @@ try {
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
     $_SESSION['is_admin'] = $user['is_admin'];
+    $_SESSION['cart'] = [];
 
     echo json_encode([
         'success' => true,

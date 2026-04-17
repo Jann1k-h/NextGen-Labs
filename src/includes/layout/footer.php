@@ -13,6 +13,8 @@ integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbIT
 <script src="/../assets/js/courses/courses.js"></script>
 <script src="/../assets/js/courses/courses-filters.js"></script>
 <script src="/../assets/js/courses/course-details.js"></script>
+<script src="/../assets/js/theme.js"></script>
+<script src="/assets/js/cart/cart.js"></script>
 
 </body>
 </html>

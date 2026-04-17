@@ -1,10 +1,10 @@
 <!-- Register Modal -->
 <div class="modal fade" id="register-modal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+    <div class="modal-content border shadow-lg rounded-4 overflow-hidden bg-body">
 
       <!-- Header -->
-      <div class="modal-header px-4 py-3 border-0 bg-light">
+      <div class="modal-header px-4 py-3 border-0 bg-body-tertiary">
         <h5 class="modal-title fw-semibold mb-0">Registrieren</h5>
         <button type="button" class="btn-close close-modal" data-bs-dismiss="modal"></button>
       </div>
@@ -98,9 +98,9 @@
       </div>
 
       <!-- Footer -->
-      <div class="modal-footer px-4 py-3 border-0 bg-light d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div class="modal-footer px-4 py-3 border-0 bg-body-tertiary d-flex justify-content-between align-items-center flex-wrap gap-2">
 
-        <p class="mb-0 text-muted">
+        <p class="mb-0 text-body-secondary">
             Bereits Mitglied? 
           <a href="javascript:void(0)" class="login-button-modal fw-semibold text-decoration-none">
             Login

@@ -51,10 +51,20 @@ $(document).on('click', '#login-submit-button-modal', function() {
             console.log(data.message);
 
             const categoryId = $('#category-select').val();
-            loadCourses(categoryId);
+
+            // Prüfen, ob Elemente von Kursliste vorhanden sind mit length. Wenn length > 0, dann existieren Elemente, ansonsten nicht.
+            // Das ist notwendig, damit die Funktion loadCourses() nicht auf Seiten ohne Kursliste (z.B. Details-Seite) aufgerufen wird, da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
+            if ($('#course-list').length) {
+                loadCourses(categoryId);
+            }
 
             const courseId = $('#course-details').data('course-id');
-            loadCourseDetails(courseId)
+
+            // Prüfen, ob Elemente von Kursdetails vorhanden sind mit length. Wenn length > 0, dann existieren Elemente, ansonsten nicht.
+            // Das ist notwendig, damit die Funktion loadCourseDetails() nicht auf Seiten ohne Kursdetails (z.B. Startseite) aufgerufen wird, da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
+            if (courseId) {
+                loadCourseDetails(courseId);
+            }
 
         } else if (data.success == false) {
 
@@ -220,10 +230,20 @@ $(document).on('click', '#logout-button-nav', function() {
             console.log(data.message);
 
             const categoryId = $('#category-select').val();
-            loadCourses(categoryId);
+
+            // Prüfen, ob Elemente von Kursliste vorhanden sind mit length. Wenn length > 0, dann existieren Elemente, ansonsten nicht.
+            // Das ist notwendig, damit die Funktion loadCourses() nicht auf Seiten ohne Kursliste (z.B. Details-Seite) aufgerufen wird, da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
+            if ($('#course-list').length) {
+                loadCourses(categoryId);
+            }
 
             const courseId = $('#course-details').data('course-id');
-            loadCourseDetails(courseId)
+
+            // Prüfen, ob Elemente von Kursdetails vorhanden sind mit length. Wenn length > 0, dann existieren Elemente, ansonsten nicht.
+            // Das ist notwendig, damit die Funktion loadCourseDetails() nicht auf Seiten ohne Kursdetails (z.B. Startseite) aufgerufen wird, da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
+            if (courseId) {
+                loadCourseDetails(courseId);
+            }
 
         } else if (data.success == false) {
 

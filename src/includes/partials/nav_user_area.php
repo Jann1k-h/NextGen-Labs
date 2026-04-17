@@ -59,4 +59,5 @@ In nav nur text, logik in nav_user_area
   <button class="btn btn-outline-success btn-sm" id="logout-button-nav" type="button">
     Logout
   </button>
+
 <?php endif; ?>

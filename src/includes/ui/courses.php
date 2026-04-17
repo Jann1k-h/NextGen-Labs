@@ -1,14 +1,14 @@
 <div class="container py-4">
 
-  <div class="bg-white border rounded-4 shadow-sm p-3 p-md-4 mb-4">
+  <div class="bg-body-tertiary border rounded-4 shadow-sm p-3 p-md-4 mb-4">
 
     <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-5">
       
       <div class="me-lg-auto">
-        <a class="navbar-brand fw-bold fs-3 text-dark m-0 text-decoration-none" href="/">
+        <a class="navbar-brand fw-bold fs-3 m-0 text-decoration-none text-body" href="/">
           Kurse
         </a>
-        <div class="text-muted small text-nowrap">Entdecke passende Kurse für dich</div>
+        <div class="text-body-secondary small text-nowrap">Entdecke passende Kurse für dich</div>
       </div>
 
       <div class="d-flex flex-column flex-md-row gap-2 w-100 w-lg-auto">
