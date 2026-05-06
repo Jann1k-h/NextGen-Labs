@@ -127,3 +127,23 @@ INSERT INTO course_images (course_id, image_path, alt_text, sort_order, is_cover
 (9, '/assets/course_images/seo.png', 'SEO Kurs', 1, 1),
 -- Machine Learning
 (10, '/assets/course_images/ml.png', 'Machine Learning', 1, 1);
+
+
+/* Warenkorb */
+CREATE TABLE cart_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NOT NULL,
+    course_id INT NOT NULL,
+
+    quantity INT DEFAULT 1,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    /* verhindert doppelte Einträge, aber ermöglicht mehrere selbe Kurse pro Benutzer */
+    UNIQUE KEY unique_cart (user_id, course_id),
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
