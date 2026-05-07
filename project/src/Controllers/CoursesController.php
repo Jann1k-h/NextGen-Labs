@@ -40,7 +40,6 @@ class CoursesController
 
             echo json_encode($course);
             exit;
-
         } catch (PDOException $e) {
             http_response_code(500);
             echo json_encode([
@@ -60,7 +59,6 @@ class CoursesController
 
             echo json_encode($categories);
             exit;
-
         } catch (PDOException $e) {
             http_response_code(500);
             echo json_encode([
@@ -84,7 +82,6 @@ class CoursesController
 
             echo json_encode($courses);
             exit;
-
         } catch (PDOException $e) {
             http_response_code(500);
             echo json_encode([
@@ -93,5 +90,18 @@ class CoursesController
             ]);
             exit;
         }
+    }
+
+    // Sucht Kurse basierend auf Suchbegriff, Kategorie und "nur freie Kurse"-Filter
+    public function search()
+    {
+        $query = $_GET['query'] ?? '';  // Suchbegriff aus Input
+        $categoryId = $_GET['category_id'] ?? '';   // Kategorie-Filter
+        $onlyFree = isset($_GET['free']) && $_GET['free'] === 'true';   // Filter: nur freie Kurse
+
+        $courses = $this->courseRepository->searchCourses($query, $categoryId, $onlyFree);
+
+        header('Content-Type: application/json');
+        echo json_encode($courses);
     }
 }

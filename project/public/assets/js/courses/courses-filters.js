@@ -1,29 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
-  loadCoursesCategories();
+    loadCoursesCategories();
 });
 
+// AJAX: Kategorien vom Backend holen und ins Dropdown rendern
 function loadCoursesCategories() {
-  getCoursesCategoriesRequest()
-  .then(data => {
-    renderCoursesCategories(data);
-  });
+    getCoursesCategoriesRequest()
+        .then(data => renderCoursesCategories(data));
 }
 
-$(document).on('change', '#category-select', function() {
-  triggerCourseReload();
-});
+// Eventlistener für Kategorie- und Free-Filter
+$("#category-select, #free-courses-checkbox").on("change", loadCoursesFromFilters);
+// Eventlistener für Live-Suche
+$("#course-search").on("keyup", loadCoursesFromFilters);
 
-$(document).on('change', '#free-courses-checkbox', function() {
-  triggerCourseReload();
-});
-
-function triggerCourseReload() {
-  const categoryId = $('#category-select').val();
-  const onlyFree = $('#free-courses-checkbox').is(':checked');
-
-  console.log('Category:', categoryId);
-  console.log('Only free:', onlyFree);
-
-  // Funktion ist ist in courses.js
-  loadCourses(categoryId, onlyFree);
+// Funktion zum Neuladen der Kurse
+function loadCoursesFromFilters() {
+    loadCourses(
+        $("#category-select").val(),
+        $("#free-courses-checkbox").is(":checked"),
+        $("#course-search").val()
+    );
 }

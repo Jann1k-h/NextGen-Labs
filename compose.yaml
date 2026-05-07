@@ -5,7 +5,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./project:/var/www/html
+      - ./:/var/www/html
     depends_on:
       - db
     environment:
