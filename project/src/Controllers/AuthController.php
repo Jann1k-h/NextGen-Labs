@@ -16,7 +16,7 @@ class AuthController
     {
 
         // data enthält die Daten, die der Client im JSON-Format gesendet hat, also z.B. identifier, password und rememberMe
-        $data = Request::getJson();
+        $data = json_decode(file_get_contents("php://input"), true);
 
         $identifier = trim($data['identifier'] ?? '');
         $password = $data['password'] ?? '';
@@ -24,12 +24,14 @@ class AuthController
 
         $result = $this->authService->login($identifier, $password, $rememberMe);
 
-        Response::json($result);
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
     }
 
     public function register(): void
     {
-        $data = Request::getJson();
+        $data = json_decode(file_get_contents("php://input"), true);
 
         $title = trim($data['title'] ?? '');
         $firstname = trim($data['firstname'] ?? '');
@@ -45,7 +47,9 @@ class AuthController
 
         $result = $this->authService->register($title, $firstname, $lastname, $username, $address, $zipcode, $city, $email, $password, $confirmPassword, $paymentInfo);
         
-        Response::json($result);
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
 
     }
 
@@ -53,6 +57,8 @@ class AuthController
     {
         $result = $this->authService->logout();
 
-        Response::json($result);
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
     }
 }

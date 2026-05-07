@@ -2,86 +2,96 @@
 
 class CoursesController
 {
+    private CourseRepository $courseRepository;
+
+    public function __construct()
+    {
+        $this->courseRepository = new CourseRepository();
+    }
+
     public function getDetails(): void
     {
-        $courseId = Request::get('id');
+        header('Content-Type: application/json');
+
+        $courseId = $_GET['id'] ?? null;
+
         if (!$courseId) {
-            Response::json([
+            http_response_code(400);
+            echo json_encode([
                 'success' => false,
                 'message' => 'Keine Kurs-ID angegeben'
-            ], 400);
-            return;
+            ]);
+            exit;
         }
 
-        // Hier würde normalerweise die Logik stehen, um die Kursdetails aus der Datenbank zu holen
-        // Zum Beispiel:
-        // $courseRepo = new CourseRepository();
-        // $course = $courseRepo->getCourseById($courseId);
+        $isLoggedIn = isset($_SESSION['user_id']);
 
-        // Dummy-Daten für die Antwort
-        $course = [
-            'id' => $courseId,
-            'title' => 'Beispielkurs',
-            'description' => 'Dies ist eine detaillierte Beschreibung des Beispielkurses.',
-            'category' => 'Programmierung',
-            'is_free' => true
-        ];
+        try {
+            $course = $this->courseRepository->getCourseById($courseId, $isLoggedIn);
 
-        Response::json([
-            'success' => true,
-            'data' => $course
-        ]);
+            if (!$course) {
+                http_response_code(404);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Kurs nicht gefunden'
+                ]);
+                exit;
+            }
+
+            echo json_encode($course);
+            exit;
+
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'DB-Fehler'
+            ]);
+            exit;
+        }
     }
 
     public function getCategories(): void
     {
-        // Hier würde normalerweise die Logik stehen, um die Kurskategorien aus der Datenbank zu holen
+        header('Content-Type: application/json');
 
-        // Dummy-Daten für die Antwort
-        $categories = [
-            ['id' => 1, 'name' => 'Programmierung'],
-            ['id' => 2, 'name' => 'Design'],
-            ['id' => 3, 'name' => 'Marketing']
-        ];
+        try {
+            $categories = $this->courseRepository->getCategories();
 
-        Response::json([
-            'success' => true,
-            'data' => $categories
-        ]);
+            echo json_encode($categories);
+            exit;
+
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'DB-Fehler'
+            ]);
+            exit;
+        }
     }
 
     public function getCourses(): void
     {
-        $categoryId = Request::get('category_id', '');
-        $onlyFree = Request::get('free', false);
+        header('Content-Type: application/json');
 
-        // Hier würde normalerweise die Logik stehen, um die Kurse basierend auf den Filtern aus der Datenbank zu holen
+        $isLoggedIn = isset($_SESSION['user_id']);
+        $categoryId = $_GET['category_id'] ?? null;
+        $onlyFree = $_GET['free'] ?? 'false';
 
-        // Dummy-Daten für die Antwort
-        $courses = [
-            [
-                'id' => 1,
-                'title' => 'Einführung in PHP',
-                'category_id' => 1,
-                'is_free' => true
-            ],
-            [
-                'id' => 2,
-                'title' => 'Fortgeschrittenes JavaScript',
-                'category_id' => 1,
-                'is_free' => false
-            ],
-            [
-                'id' => 3,
-                'title' => 'Grundlagen des Grafikdesigns',
-                'category_id' => 2,
-                'is_free' => true
-            ]
-        ];
+        try {
+            $courses = $this->courseRepository->getCourses($isLoggedIn, $categoryId, $onlyFree);
 
-        Response::json([
-            'success' => true,
-            'data' => $courses
-        ]);
+            echo json_encode($courses);
+            exit;
+
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'DB-Fehler'
+            ]);
+            exit;
+        }
     }
 }
