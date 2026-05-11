@@ -13,7 +13,6 @@ function loginRequest(identifier, password, rememberMe) {
     // fetch in auth-api bekommt die Antwort vom Server
     }).then(async res => {
         const text = await res.text();
-        console.log('RAW RESPONSE:', text);
         return JSON.parse(text);
     });
 }
@@ -39,7 +38,6 @@ function registerRequest(title, firstname, lastname, username, address, zipcode,
         })
     }).then(async res => {
         const text = await res.text();
-        console.log('RAW RESPONSE:', text);
         return JSON.parse(text);
     });
 }
@@ -49,7 +47,6 @@ function logoutRequest() {
         method: 'POST'
     }).then(async res => {
         const text = await res.text();
-        console.log('RAW RESPONSE:', text);
         return JSON.parse(text);
     });
 }

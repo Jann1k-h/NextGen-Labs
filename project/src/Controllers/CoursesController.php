@@ -19,49 +19,29 @@ class CoursesController
 
         $isLoggedIn = isset($_SESSION['user_id']);
 
-        try {
-            $courseRepository = new CourseRepository();
-            $course = $courseRepository->getCourseById($courseId, $isLoggedIn);
+        $courseRepository = new CourseRepository();
+        $course = $courseRepository->getCourseById($courseId, $isLoggedIn);
 
-            if (!$course) {
-                http_response_code(404);
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Kurs nicht gefunden'
-                ]);
-                exit;
-            }
-
-            echo json_encode($course);
-            exit;
-        } catch (PDOException $e) {
-            http_response_code(500);
+        if (!$course) {
+            http_response_code(404);
             echo json_encode([
                 'success' => false,
-                'message' => 'DB-Fehler'
+                'message' => 'Kurs nicht gefunden'
             ]);
             exit;
         }
+
+        echo json_encode($course);
     }
 
     public function getCategories(): void
     {
         header('Content-Type: application/json');
 
-        try {
-            $courseRepository = new CourseRepository();
-            $categories = $courseRepository->getCategories();
+        $courseRepository = new CourseRepository();
+        $categories = $courseRepository->getCategories();
 
-            echo json_encode($categories);
-            exit;
-        } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode([
-                'success' => false,
-                'message' => 'DB-Fehler'
-            ]);
-            exit;
-        }
+        echo json_encode($categories);
     }
 
     public function getCourses(): void
@@ -72,33 +52,25 @@ class CoursesController
         $categoryId = $_GET['category_id'] ?? null;
         $onlyFree = $_GET['free'] ?? 'false';
 
-        try {
-            $courseRepository = new CourseRepository();
-            $courses = $courseRepository->getCourses($isLoggedIn, $categoryId, $onlyFree);
+        $courseRepository = new CourseRepository();
+        $courses = $courseRepository->getCourses($isLoggedIn, $categoryId, $onlyFree);
 
-            echo json_encode($courses);
-            exit;
-        } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode([
-                'success' => false,
-                'message' => 'DB-Fehler'
-            ]);
-            exit;
-        }
+        echo json_encode($courses);
     }
 
     // Sucht Kurse basierend auf Suchbegriff, Kategorie und "nur freie Kurse"-Filter
-    public function search()
+    public function search(): void
     {
-        $query = $_GET['query'] ?? '';  // Suchbegriff aus Input
-        $categoryId = $_GET['category_id'] ?? '';   // Kategorie-Filter
-        $onlyFree = isset($_GET['free']) && $_GET['free'] === 'true';   // Filter: nur freie Kurse
+        header('Content-Type: application/json');
+
+        $query = $_GET['query'] ?? '';
+        $categoryId = $_GET['category_id'] ?? '';
+        $onlyFree = isset($_GET['free']) && $_GET['free'] === 'true';
+        $isLoggedIn = isset($_SESSION['user_id']);
 
         $courseRepository = new CourseRepository();
-        $courses = $courseRepository->searchCourses($query, $categoryId, $onlyFree);
+        $courses = $courseRepository->searchCourses($query, $categoryId, $onlyFree, $isLoggedIn);
 
-        header('Content-Type: application/json');
         echo json_encode($courses);
     }
 }

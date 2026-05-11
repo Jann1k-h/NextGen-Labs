@@ -8,7 +8,7 @@ function getCoursesCategoriesRequest() {
     .then(res => res.json());
 }
 
-function getCoursesRequest(categoryId = '', onlyFree = false) {
-  return fetch(`/api/serviceHandler.php?module=courses&action=getCourses&category_id=${categoryId}&free=${onlyFree}`)
+function getCoursesRequest(categoryId = '', onlyFree = false, searchQuery = '') {
+  return fetch(`/api/serviceHandler.php?module=courses&action=search&category_id=${categoryId}&free=${onlyFree}&query=${encodeURIComponent(searchQuery)}`)
     .then(res => res.json());
 }

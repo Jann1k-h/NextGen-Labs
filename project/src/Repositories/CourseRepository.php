@@ -2,15 +2,11 @@
 
 class CourseRepository
 {
-    private PDO $pdo;
-
-    public function __construct()
-    {
-        $this->pdo = getDB();
-    }
-
+    
     public function getCourseById($courseId, bool $isLoggedIn): ?array
     {
+        $pdo = getDB();
+
         $sql = "
             SELECT
                 courses.id,
@@ -50,7 +46,7 @@ class CourseRepository
             AND courses.id = :id
         ";
 
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
 
         $stmt->execute([
             'id' => $courseId
@@ -67,6 +63,8 @@ class CourseRepository
 
     public function getCategories(): array
     {
+        $pdo = getDB();
+
         $sql = "
             SELECT
                 id,
@@ -74,7 +72,7 @@ class CourseRepository
             FROM categories
         ";
 
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -82,6 +80,8 @@ class CourseRepository
 
     public function getCourses(bool $isLoggedIn, $categoryId, $onlyFree): array
     {
+        $pdo = getDB();
+
         $sql = "
             SELECT
                 courses.id,
@@ -125,7 +125,7 @@ class CourseRepository
             $sql .= " AND courses.stock > 0";
         }
 
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -133,8 +133,10 @@ class CourseRepository
 
     // Funktion für Live-Suche nach Kursen
     // Unterstützt Suchbegriff, Kategorie und nur freie Kurse
-    public function searchCourses($query, $categoryId, $onlyFree)
+    public function searchCourses($query, $categoryId, $onlyFree, bool $isLoggedIn): array
     {
+        $pdo = getDB();
+        
         $sql = "
             SELECT
                 courses.id,
@@ -143,8 +145,21 @@ class CourseRepository
                 courses.price,
                 courses.rating,
                 courses.stock,
-                courses.lecturer_name,
-                courses.lecturer_contact,
+        ";
+
+        if ($isLoggedIn) {
+            $sql .= "
+                courses.lecturer_name AS lecturer_name,
+                courses.lecturer_contact AS lecturer_contact,
+            ";
+        } else {
+            $sql .= "
+                NULL AS lecturer_name,
+                NULL AS lecturer_contact,
+            ";
+        }
+
+        $sql .= "
                 categories.name AS category_name,
                 course_images.image_path AS course_image,
                 course_images.alt_text AS course_image_alt
@@ -158,20 +173,34 @@ class CourseRepository
 
         // Filter nach Suchbegriff
         if ($query !== '') {
-            $sql .= " AND (courses.title LIKE :query OR courses.description LIKE :query OR courses.lecturer_name LIKE :query)";
+            if ($isLoggedIn) {
+                $sql .= " AND (
+                    courses.title LIKE :query
+                    OR courses.description LIKE :query
+                    OR courses.lecturer_name LIKE :query
+                )";
+            } else {
+                $sql .= " AND (
+                    courses.title LIKE :query
+                    OR courses.description LIKE :query
+                )";
+            }
+
             $params['query'] = "%$query%";
         }
+
         // Kategorie-Filter
         if ($categoryId !== '') {
             $sql .= " AND courses.category_id = :categoryId";
             $params['categoryId'] = $categoryId;
         }
+
         // Nur freie Kurse
         if ($onlyFree) {
             $sql .= " AND courses.stock > 0";
         }
 
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

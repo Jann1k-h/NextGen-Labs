@@ -4,17 +4,13 @@
 
 class UserRepository
 {
-    private PDO $pdo;
-
-    public function __construct()
-    {
-        $this->pdo = getDB();
-    }
 
     // Rpckgabewert ist entweder ein User-Objekt oder null, wenn kein User gefunden wurde
     public function findByIdentifier(string $identifier): ?User
     {
-        $stmt = $this->pdo->prepare("
+        $pdo = getDB();
+
+        $stmt = $pdo->prepare("
             SELECT * 
             FROM users 
             WHERE username = :identifier OR email = :identifier
@@ -35,7 +31,9 @@ class UserRepository
 
     public function updateRememberToken(int $userId, ?string $token, ?string $expires): void
     {
-        $stmt = $this->pdo->prepare("
+        $pdo = getDB();
+
+        $stmt = $pdo->prepare("
             UPDATE users 
             SET remember_token = :token, remember_token_expires = :expires 
             WHERE id = :user_id
@@ -52,7 +50,9 @@ class UserRepository
     {
 
         // Insert into sind Werte aus DB, Values sind Platzhalter, die durch execute mit den tatsächlichen Werten ersetzt werden
-        $stmt = $this->pdo->prepare("
+        $pdo = getDB();
+
+        $stmt = $pdo->prepare("
             INSERT INTO users (title, firstname, lastname, username, address, zipcode, city, email, password, payment_info)
             VALUES (:title, :firstname, :lastname, :username, :address, :zipcode, :city, :email, :password, :payment_info)
         ");
@@ -72,7 +72,7 @@ class UserRepository
         ]);
 
         return new User([
-            'id' => (int)$this->pdo->lastInsertId(),
+            'id' => (int)$pdo->lastInsertId(),
             'username' => $username,
             'email' => $email,
             'password' => $hashedPassword,
