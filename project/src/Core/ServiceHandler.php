@@ -28,6 +28,13 @@ class ServiceHandler
                 $controller->$action();
                 break;
 
+            case 'cart':
+                $controller = new CartController();
+
+                // Aufruf der entsprechenden Controller-Methode, wenn man zb von Login kommt ist action = login und dann wird die login Methode im AuthController aufgerufen
+                $controller->$action();
+                break;
+
             default:
                 http_response_code(400);
                 header('Content-Type: application/json');

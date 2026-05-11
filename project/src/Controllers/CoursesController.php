@@ -2,13 +2,6 @@
 
 class CoursesController
 {
-    private CourseRepository $courseRepository;
-
-    public function __construct()
-    {
-        $this->courseRepository = new CourseRepository();
-    }
-
     public function getDetails(): void
     {
         header('Content-Type: application/json');
@@ -27,7 +20,8 @@ class CoursesController
         $isLoggedIn = isset($_SESSION['user_id']);
 
         try {
-            $course = $this->courseRepository->getCourseById($courseId, $isLoggedIn);
+            $courseRepository = new CourseRepository();
+            $course = $courseRepository->getCourseById($courseId, $isLoggedIn);
 
             if (!$course) {
                 http_response_code(404);
@@ -55,7 +49,8 @@ class CoursesController
         header('Content-Type: application/json');
 
         try {
-            $categories = $this->courseRepository->getCategories();
+            $courseRepository = new CourseRepository();
+            $categories = $courseRepository->getCategories();
 
             echo json_encode($categories);
             exit;
@@ -78,7 +73,8 @@ class CoursesController
         $onlyFree = $_GET['free'] ?? 'false';
 
         try {
-            $courses = $this->courseRepository->getCourses($isLoggedIn, $categoryId, $onlyFree);
+            $courseRepository = new CourseRepository();
+            $courses = $courseRepository->getCourses($isLoggedIn, $categoryId, $onlyFree);
 
             echo json_encode($courses);
             exit;
@@ -99,7 +95,8 @@ class CoursesController
         $categoryId = $_GET['category_id'] ?? '';   // Kategorie-Filter
         $onlyFree = isset($_GET['free']) && $_GET['free'] === 'true';   // Filter: nur freie Kurse
 
-        $courses = $this->courseRepository->searchCourses($query, $categoryId, $onlyFree);
+        $courseRepository = new CourseRepository();
+        $courses = $courseRepository->searchCourses($query, $categoryId, $onlyFree);
 
         header('Content-Type: application/json');
         echo json_encode($courses);

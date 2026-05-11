@@ -1,4 +1,4 @@
-function addToCartRequest(courseId) {
+function addToCartRequestOLD(courseId) {
   return fetch('/api/cart/add_cart.php', {
     method: 'POST',
     headers: {
@@ -9,6 +9,18 @@ function addToCartRequest(courseId) {
     })
   })
   .then(res => res.json());
+}
+
+function addToCartRequest(courseId) {
+  return fetch('/api/serviceHandler.php?module=cart&action=addToCart', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      courseId: courseId
+    })
+  }).then(res => res.json());
 }
 
 function getCartItemsRequest() {
