@@ -7,7 +7,7 @@ include_once VIEWS_PATH . '/layouts/nav.php';
 
 // CONTENT
 $courseId = $_GET['id'] ?? null;
-include_once VIEWS_PATH . '/components/course_details_view.php';
+include_once VIEWS_PATH . '/courses/course_details_page.php';
 //
 
 include_once VIEWS_PATH . '/layouts/footer.php';

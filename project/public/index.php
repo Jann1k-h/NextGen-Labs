@@ -6,7 +6,7 @@ include_once VIEWS_PATH . '/layouts/header.php';
 include_once VIEWS_PATH . '/layouts/nav.php';
 
 // CONTENT
-include_once VIEWS_PATH . '/components/courses.php';
+include_once VIEWS_PATH . '/courses/courses_page.php';
 //
 
 include_once VIEWS_PATH . '/layouts/footer.php';

@@ -6,32 +6,29 @@ class ServiceHandler
 {
     public function handle(string $module, string $action): void
     {
+        // Aufruf der entsprechenden Controller-Methode, wenn man zb von Login kommt ist action = login und dann wird die login Methode im AuthController aufgerufen
         switch ($module) {
             case 'auth':
                 $controller = new AuthController();
 
-                // Aufruf der entsprechenden Controller-Methode, wenn man zb von Login kommt ist action = login und dann wird die login Methode im AuthController aufgerufen
                 $controller->$action();
                 break;
 
             case 'nav':
                 $controller = new NavController();
 
-                // Aufruf der entsprechenden Controller-Methode, wenn man zb von Login kommt ist action = login und dann wird die login Methode im AuthController aufgerufen
                 $controller->$action();
                 break;
 
             case 'courses':
                 $controller = new CoursesController();
 
-                // Aufruf der entsprechenden Controller-Methode, wenn man zb von Login kommt ist action = login und dann wird die login Methode im AuthController aufgerufen
                 $controller->$action();
                 break;
 
             case 'cart':
                 $controller = new CartController();
 
-                // Aufruf der entsprechenden Controller-Methode, wenn man zb von Login kommt ist action = login und dann wird die login Methode im AuthController aufgerufen
                 $controller->$action();
                 break;
 

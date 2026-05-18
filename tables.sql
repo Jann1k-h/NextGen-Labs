@@ -133,7 +133,8 @@ INSERT INTO course_images (course_id, image_path, alt_text, sort_order, is_cover
 CREATE TABLE cart_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
 
-    user_id INT NOT NULL,
+    user_id INT NULL,
+    guest_token VARCHAR(255) NULL,
     course_id INT NOT NULL,
 
     quantity INT DEFAULT 1,
@@ -141,8 +142,8 @@ CREATE TABLE cart_items (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    /* verhindert doppelte Einträge, aber ermöglicht mehrere selbe Kurse pro Benutzer */
-    UNIQUE KEY unique_cart (user_id, course_id),
+    UNIQUE KEY unique_user_course (user_id, course_id),
+    UNIQUE KEY unique_guest_course (guest_token, course_id),
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE

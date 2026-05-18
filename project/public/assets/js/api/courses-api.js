@@ -10,5 +10,9 @@ function getCoursesCategoriesRequest() {
 
 function getCoursesRequest(categoryId = '', onlyFree = false, searchQuery = '') {
   return fetch(`/api/serviceHandler.php?module=courses&action=search&category_id=${categoryId}&free=${onlyFree}&query=${encodeURIComponent(searchQuery)}`)
-    .then(res => res.json());
+    .then(res => res.text())
+    .then(text => {
+      console.log('Courses API Antwort:', text);
+      return JSON.parse(text);
+    });
 }

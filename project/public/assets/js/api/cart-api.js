@@ -1,5 +1,5 @@
-function addToCartRequestOLD(courseId) {
-  return fetch('/api/cart/add_cart.php', {
+function addToCartRequest(courseId) {
+  return fetch('/api/serviceHandler.php?module=cart&action=add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -7,23 +7,22 @@ function addToCartRequestOLD(courseId) {
     body: JSON.stringify({
       course_id: courseId
     })
-  })
-  .then(res => res.json());
+  }).then(res => res.json());
 }
 
-function addToCartRequest(courseId) {
-  return fetch('/api/serviceHandler.php?module=cart&action=addToCart', {
+function getCartItemsRequest() {
+  return fetch('/api/serviceHandler.php?module=cart&action=get')
+    .then(res => res.json());
+}
+
+function removeCartItemRequest(cartItemId) {
+  return fetch('/api/serviceHandler.php?module=cart&action=remove', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      courseId: courseId
+      cart_item_id: cartItemId
     })
   }).then(res => res.json());
-}
-
-function getCartItemsRequest() {
-  return fetch('/api/cart/get_cart.php')
-    .then(res => res.json());
 }

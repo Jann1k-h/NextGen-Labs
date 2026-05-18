@@ -73,7 +73,9 @@ class AuthService
             $_SESSION['user_id'] = $user->id;
             $_SESSION['username'] = $user->username;
             $_SESSION['is_admin'] = $user->isAdmin;
-            $_SESSION['cart'] = [];
+
+            $cartService = new CartService();
+            $cartService->mergeGuestCartIntoUserCart($user->id);
 
             return [
                 'success' => true,

@@ -1,4 +1,51 @@
 // --------------------------------------------------
+// Auth UI + Validation + Events
+// --------------------------------------------------
+
+// Funktion zum Zurücksetzen der Fehlermeldungen im Login-Formular
+function resetLoginErrors() {
+    $('#login-identifier-error').text('');
+    $('#login-password-error').text('');
+}
+
+// Funktion zum Zurücksetzen der Fehlermeldungen im Registrierung-Formular
+function resetRegisterErrors() {
+    $('#register-title-error').text('');
+    $('#register-firstname-error').text('');
+    $('#register-lastname-error').text('');
+    $('#register-username-error').text('');
+    $('#register-address-error').text('');
+    $('#register-zipcode-error').text('');
+    $('#register-city-error').text('');
+    $('#register-email-error').text('');
+    $('#register-password-error').text('');
+    $('#register-password-confirm-error').text('');
+    // $('#register-payment-info-error').text('');
+}
+
+// Button rechts oben in der Navigation zum Öffnen des Login-Modals
+$(document).on('click', '#login-button-nav', function() {
+    resetLoginErrors();
+    $("#login-modal").modal("show");
+});
+
+// Button im Login-Modal zum Öffnen des Registrierungs-Modals
+$(document).on('click', '.register-button-modal', function() {
+    resetRegisterErrors();
+
+    $("#login-modal").modal("hide");
+    $("#register-modal").modal("show");
+});
+
+// Button im Registrierungs-Modal zum Öffnen des Login-Modals
+$(document).on('click', '.login-button-modal', function() {
+    resetLoginErrors();
+    resetRegisterErrors();
+    $("#register-modal").modal("hide");
+    $("#login-modal").modal("show");
+});
+
+// --------------------------------------------------
 // Login-Handler
 $(document).on('click', '#login-submit-button-modal', function() {
     const identifier = $('#login-identifier').val().trim();
@@ -31,10 +78,12 @@ $(document).on('click', '#login-submit-button-modal', function() {
 
             showAuthAlert(data.message, 'success');
 
+            // User-Area wird neu geladen; danach Warenkorb neu laden, damit der Zähler nach Login korrekt ist.
             reloadUserArea();
-            
+            loadCartItems();
+
             $("#login-modal").modal("hide");
-            
+
             console.log(data.message);
 
             const categoryId = $('#category-select').val();
@@ -158,7 +207,7 @@ $(document).on('click', '#register-submit-button-modal', function() {
     console.log("Title: " + title + ", Firstname: " + firstname + ", Lastname: " + lastname + ", Username: " + username + ", Address: " + address + ", Zipcode: " + zipcode + ", City: " + city + ", Email: " + email + ", Password: " + password + ", ConfirmPassword: " + confirmPassword + ", PaymentInfo: " + paymentInfo);
 
     registerRequest(title, firstname, lastname, username, address, zipcode, city, email, password, confirmPassword, paymentInfo)
-    .then(data => { 
+    .then(data => {
         if (data.success == true) {
 
             showAuthAlert(data.message, 'success');
@@ -191,14 +240,16 @@ $(document).on('click', '#register-submit-button-modal', function() {
 // --------------------------------------------------
 // Logout-Handler
 $(document).on('click', '#logout-button-nav', function() {
-
+    console.log('Logout Button geklickt');
     logoutRequest()
     .then(data => {
         if (data.success == true) {
 
             showAuthAlert(data.message, 'success');
 
+            // User-Area wird neu geladen; danach Warenkorb neu laden, damit der Gast-Warenkorb/Zähler korrekt ist.
             reloadUserArea();
+            loadCartItems();
 
             console.log(data.message);
 

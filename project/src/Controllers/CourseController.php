@@ -4,6 +4,7 @@ class CoursesController
 {
     public function getDetails(): void
     {
+        // Daten kommen aus der URL
         header('Content-Type: application/json');
 
         $courseId = $_GET['id'] ?? null;

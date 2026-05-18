@@ -13,9 +13,14 @@
 
     <hr>
 
-    <button class="btn btn-primary w-100">
-      Zur Kasse
-    </button>
+  <div class="d-flex justify-content-between fw-bold mb-3">
+    <span>Gesamt:</span>
+    <span id="cart-total">0.00 €</span>
+  </div>
+
+  <button id="checkout-btn" class="btn btn-primary w-100">
+    Zur Kasse
+  </button>
 
   </div>
 

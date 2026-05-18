@@ -14,11 +14,11 @@
       <div class="d-flex flex-column flex-md-row gap-2 w-100 w-lg-auto">
 
         <div class="flex-grow-1">
-          <?php include __DIR__ . '/../partials/courses_search.php'; ?>
+          <?php include __DIR__ . '/courses_search.php'; ?>
         </div>
 
         <div>
-          <?php include __DIR__ . '/../partials/courses_filters.php'; ?>
+          <?php include __DIR__ . '/courses_filters.php'; ?>
         </div>
         
       </div>

@@ -25,10 +25,16 @@ In nav nur text, logik in nav_user_area
 <a class="btn btn-outline-primary btn-sm" href="/kurse.php">Kurse</a>
 
 <a href="#" 
-   class="btn btn-outline-primary btn-sm" 
+   id="cart-button-nav"
+   class="btn btn-outline-primary btn-sm position-relative" 
    data-bs-toggle="offcanvas" 
    data-bs-target="#cartOffcanvas">
   <i class="bi bi-cart"></i>
+
+  <span id="cart-count"
+        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+    0
+  </span>
 </a>
 
 <?php if (!isset($_SESSION['user_id'])): ?>
