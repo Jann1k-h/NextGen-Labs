@@ -22,9 +22,11 @@ require_once REPOSITORIES_PATH . '/CartRepository.php';
 // Services
 require_once SERVICES_PATH . '/AuthService.php';
 require_once SERVICES_PATH . '/CartService.php';
+require_once SERVICES_PATH . '/CheckoutService.php';
 
 // Controllers
 require_once CONTROLLERS_PATH . '/AuthController.php';
 require_once CONTROLLERS_PATH . '/NavController.php';
 require_once CONTROLLERS_PATH . '/CourseController.php';
 require_once CONTROLLERS_PATH . '/CartController.php';
+require_once CONTROLLERS_PATH . '/CheckoutController.php';

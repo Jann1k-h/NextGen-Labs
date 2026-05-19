@@ -109,11 +109,22 @@ $(document).on('click', '.remove-cart-item-btn', function () {
 });
 
 // Button "Zur Kasse"
+// Button "Zur Kasse"
 $(document).on('click', '#checkout-btn', function () {
-  window.location.href = '/checkout.php';
+
+  checkCheckoutRequest()
+    .then(data => {
+
+      if (data.success) {
+        showAuthAlert(data.message, 'success');
+        window.location.href = '/checkout.php';
+      } else {
+        showAuthAlert(data.message, 'danger');
+      }
+    })
 });
 
-// Optional: Beim Laden der Seite die Cart-Items laden
+// Beim Laden der Seite die Cart-Items laden
 $(document).ready(() => {
   loadCartItems();
 });

@@ -148,3 +148,56 @@ CREATE TABLE cart_items (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
+
+/* Bestellungen */
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NOT NULL,
+
+    billing_title ENUM('Herr','Frau') NOT NULL,
+    billing_firstname VARCHAR(100) NOT NULL,
+    billing_lastname VARCHAR(100) NOT NULL,
+    billing_address VARCHAR(255) NOT NULL,
+    billing_zipcode VARCHAR(20) NOT NULL,
+    billing_city VARCHAR(100) NOT NULL,
+    billing_email VARCHAR(255) NOT NULL,
+    billing_payment_info TEXT,
+
+    status VARCHAR(50) NOT NULL DEFAULT 'pending',
+    total_price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_orders_user
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+/* Bestellpositionen */
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    order_id INT NOT NULL,
+    course_id INT NOT NULL,
+
+    quantity INT NOT NULL DEFAULT 1,
+    price DECIMAL(10,2) NOT NULL,
+
+    course_for VARCHAR(255) NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_order_items_order
+        FOREIGN KEY (order_id) REFERENCES orders(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_order_items_course
+        FOREIGN KEY (course_id) REFERENCES courses(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);

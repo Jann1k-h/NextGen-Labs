@@ -10,12 +10,14 @@ integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbIT
 <script src="<?= BASE_URL ?>/assets/js/api/auth-api.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/api/cart-api.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/api/courses-api.js"></script>
+<script src="<?= BASE_URL ?>/assets/js/api/checkout-api.js"></script>
 
 <script src="<?= BASE_URL ?>/assets/js/ui.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/auth.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/cart.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/courses.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/course-details.js"></script>
+<script src="<?= BASE_URL ?>/assets/js/checkout.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/theme.js"></script>
 
 </body>

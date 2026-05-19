@@ -5,7 +5,7 @@
 class UserRepository
 {
 
-    // Rpckgabewert ist entweder ein User-Objekt oder null, wenn kein User gefunden wurde
+    // Rückgabewert ist entweder ein User-Objekt oder null, wenn kein User gefunden wurde
     public function findByIdentifier(string $identifier): ?User
     {
         $pdo = getDB();
@@ -81,5 +81,36 @@ class UserRepository
             'remember_token' => null,
             'remember_token_expires' => null
         ]);
+    }
+
+
+    public function getCheckoutDataById(int $userId): ?array
+    {
+        $pdo = getDB();
+
+        $stmt = $pdo->prepare("
+            SELECT
+                id,
+                username,
+                title,
+                firstname,
+                lastname,
+                address,
+                zipcode,
+                city,
+                email,
+                payment_info
+            FROM users
+            WHERE id = :id
+            LIMIT 1
+        ");
+
+        $stmt->execute([
+            'id' => $userId
+        ]);
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $user ?: null;
     }
 }

@@ -1,0 +1,1 @@
+<div id="checkout-details"></div>

@@ -32,6 +32,12 @@ class ServiceHandler
                 $controller->$action();
                 break;
 
+            case 'checkout':
+                $controller = new CheckoutController();
+
+                $controller->$action();
+                break;
+
             default:
                 http_response_code(400);
                 header('Content-Type: application/json');
