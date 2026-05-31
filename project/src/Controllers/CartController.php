@@ -7,7 +7,7 @@ class CartController
         header('Content-Type: application/json');
 
         $data = json_decode(file_get_contents("php://input"), true);
-        $courseId = isset($data['course_id']) ? (int)$data['course_id'] : 0;
+        $courseId = $data['course_id'];
 
         $cartService = new CartService();
         $result = $cartService->addToCart($courseId);
@@ -32,7 +32,7 @@ class CartController
         header('Content-Type: application/json');
 
         $data = json_decode(file_get_contents("php://input"), true);
-        $cartItemId = isset($data['cart_item_id']) ? (int)$data['cart_item_id'] : 0;
+        $cartItemId = $data['cart_item_id'];
 
         $cartService = new CartService();
         $result = $cartService->removeFromCart($cartItemId);

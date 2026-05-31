@@ -2,12 +2,12 @@
 
 class CheckoutController
 {
-    public function check(): void
+    public function checkCheckout(): void
     {
         header('Content-Type: application/json');
 
         $checkoutService = new CheckoutService();
-        $result = $checkoutService->checkCheckoutAllowed();
+        $result = $checkoutService->checkCheckout();
 
         echo json_encode($result);
         exit;
@@ -19,6 +19,20 @@ class CheckoutController
 
         $checkoutService = new CheckoutService();
         $result = $checkoutService->getCheckoutData();
+
+        echo json_encode($result);
+        exit;
+    }
+
+    public function checkVoucher(): void
+    {
+        header('Content-Type: application/json');
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $voucherCode = $input['voucher_code'] ?? '';
+
+        $checkoutService = new CheckoutService();
+        $result = $checkoutService->checkVoucher($voucherCode);
 
         echo json_encode($result);
         exit;

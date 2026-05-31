@@ -149,6 +149,53 @@ CREATE TABLE cart_items (
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
+/* Gutscheine */
+CREATE TABLE vouchers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(100) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    discount_type ENUM('percent', 'fixed') NOT NULL,
+    discount_value DECIMAL(10,2) NOT NULL,
+    valid_until DATETIME NULL,
+    usage_limit INT NULL,
+    used_count INT NOT NULL DEFAULT 0,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+/* Beispielgutscheine */
+INSERT INTO vouchers (
+    code,
+    name,
+    discount_type,
+    discount_value,
+    valid_until,
+    usage_limit,
+    used_count,
+    is_active
+) VALUES
+(
+    'WELCOME10',
+    'Willkommensgutschein 10%',
+    'percent',
+    10.00,
+    '2026-12-31 23:59:59',
+    100,
+    0,
+    1
+),
+(
+    'SAVE20',
+    '20 Euro Rabatt',
+    'fixed',
+    20.00,
+    '2026-06-30 23:59:59',
+    50,
+    0,
+    1
+);
+
 /* Bestellungen */
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -165,6 +212,11 @@ CREATE TABLE orders (
     billing_payment_info TEXT,
 
     status VARCHAR(50) NOT NULL DEFAULT 'pending',
+
+    voucher_id INT NULL,
+    voucher_code VARCHAR(100) NULL,
+    discount_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+
     total_price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -173,6 +225,11 @@ CREATE TABLE orders (
     CONSTRAINT fk_orders_user
         FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_orders_voucher
+        FOREIGN KEY (voucher_id) REFERENCES vouchers(id)
+        ON DELETE SET NULL
         ON UPDATE CASCADE
 );
 

@@ -13,11 +13,13 @@ require_once CORE_PATH . '/ServiceHandler.php';
 
 // Models
 require_once MODELS_PATH . '/User.php';
+require_once MODELS_PATH . '/Voucher.php';
 
 // Repositories
 require_once REPOSITORIES_PATH . '/UserRepository.php';
 require_once REPOSITORIES_PATH . '/CourseRepository.php';
 require_once REPOSITORIES_PATH . '/CartRepository.php';
+require_once REPOSITORIES_PATH . '/VoucherRepository.php';
 
 // Services
 require_once SERVICES_PATH . '/AuthService.php';

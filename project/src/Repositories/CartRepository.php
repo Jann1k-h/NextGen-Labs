@@ -20,7 +20,15 @@ class CartRepository
 
         $course = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $course && (int)$course['stock'] > 0;
+        if (!$course) {
+            return false;
+        }
+
+        if ((int)$course['stock'] <= 0) {
+            return false;
+        }
+
+        return true;
     }
 
     public function existsForUser(int $userId, int $courseId): bool
@@ -40,7 +48,13 @@ class CartRepository
             'course_id' => $courseId
         ]);
 
-        return (bool)$stmt->fetch(PDO::FETCH_ASSOC);
+        $existsInUserCart = (bool)$stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existsInUserCart) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function existsForGuest(string $guestToken, int $courseId): bool
@@ -60,7 +74,13 @@ class CartRepository
             'course_id' => $courseId
         ]);
 
-        return (bool)$stmt->fetch(PDO::FETCH_ASSOC);
+        $existsInGuestCart = (bool)$stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existsInGuestCart) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function addForUser(int $userId, int $courseId): void
@@ -128,7 +148,13 @@ class CartRepository
             'user_id' => $userId
         ]);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $getByUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$getByUser) {
+            return [];
+        } else {
+            return $getByUser;
+        }
     }
 
     public function getByGuest(string $guestToken): array
@@ -162,7 +188,13 @@ class CartRepository
             'guest_token' => $guestToken
         ]);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $getByGuest = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$getByGuest) {
+            return [];
+        } else {
+            return $getByGuest;
+        }
     }
 
     public function getGuestItems(string $guestToken): array
@@ -179,7 +211,61 @@ class CartRepository
             'guest_token' => $guestToken
         ]);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $getGuestItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$getGuestItems) {
+            return [];
+        } else {
+            return $getGuestItems;
+        }
+    }
+
+    public function calculateTotalByUser(int $userId): float
+    {
+        $pdo = getDB();
+
+        $stmt = $pdo->prepare("
+            SELECT SUM(ci.quantity * c.price) AS total
+            FROM cart_items ci
+            INNER JOIN courses c ON c.id = ci.course_id
+            WHERE ci.user_id = :user_id
+        ");
+
+        $stmt->execute([
+            'user_id' => $userId
+        ]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$result || $result['total'] === null) {
+            return 0.00;
+        }
+
+        return (float)$result['total'];
+    }
+
+    public function calculateTotalByGuest(string $guestToken): float
+    {
+        $pdo = getDB();
+
+        $stmt = $pdo->prepare("
+            SELECT SUM(ci.quantity * c.price) AS total
+            FROM cart_items ci
+            INNER JOIN courses c ON c.id = ci.course_id
+            WHERE ci.guest_token = :guest_token
+        ");
+
+        $stmt->execute([
+            'guest_token' => $guestToken
+        ]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$result || $result['total'] === null) {
+            return 0.00;
+        }
+
+        return (float)$result['total'];
     }
 
     public function deleteGuestCart(string $guestToken): void
