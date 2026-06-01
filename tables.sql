@@ -211,13 +211,13 @@ CREATE TABLE orders (
     billing_email VARCHAR(255) NOT NULL,
     billing_payment_info TEXT,
 
-    status VARCHAR(50) NOT NULL DEFAULT 'pending',
+    status ENUM('pending','completed','cancelled') DEFAULT 'pending',
 
     voucher_id INT NULL,
     voucher_code VARCHAR(100) NULL,
     discount_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
 
-    total_price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    total_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -233,7 +233,7 @@ CREATE TABLE orders (
         ON UPDATE CASCADE
 );
 
-/* Bestellpositionen */
+/* Bestellartikel */
 CREATE TABLE order_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
 

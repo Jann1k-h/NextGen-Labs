@@ -313,4 +313,36 @@ class CartRepository
             'guest_token' => $guestToken
         ]);
     }
+
+
+    public function clearForUser(int $userId): void
+    {
+        $pdo = getDB();
+
+        $stmt = $pdo->prepare("
+            DELETE FROM cart_items
+            WHERE user_id = :user_id
+        ");
+
+        $stmt->execute([
+            'user_id' => $userId
+        ]);
+    }
+
+    public function reduceCourseStock(int $courseId, int $quantity): void
+    {
+        $pdo = getDB();
+
+        $stmt = $pdo->prepare("
+            UPDATE courses
+            SET stock = stock - :quantity
+            WHERE id = :course_id
+            AND stock >= :quantity
+        ");
+
+        $stmt->execute([
+            'course_id' => $courseId,
+            'quantity' => $quantity
+        ]);
+    }
 }

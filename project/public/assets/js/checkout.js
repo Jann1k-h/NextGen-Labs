@@ -41,6 +41,44 @@ $(document).on('click', '#check-voucher-btn', function () {
     });
 });
 
+// --------------------------------------------------
+// Bestellung abschließen
+$(document).on('click', '#place-order-btn', function () {
+  const participants = {};
+
+  $('.participant-input').each(function () {
+    const courseId = $(this).data('course-id');
+    const participantName = $(this).val().trim();
+
+    participants[courseId] = participantName;
+  });
+
+  const orderData = {
+    billing_title: $('#billing_title').val(),
+    billing_firstname: $('#billing_firstname').val().trim(),
+    billing_lastname: $('#billing_lastname').val().trim(),
+    billing_address: $('#billing_address').val().trim(),
+    billing_zipcode: $('#billing_zipcode').val().trim(),
+    billing_city: $('#billing_city').val().trim(),
+    billing_email: $('#billing_email').val().trim(),
+    payment_method: $('#payment_method').val(),
+    voucher_code: $('#voucher_code').val().trim(),
+    participants: participants
+  };
+
+  placeOrderRequest(orderData)
+    .then(data => {
+      if (!data.success) {
+        showAuthAlert(data.message, 'danger');
+        return;
+      }
+
+      window.location.href = '/order-success.php?order_id=' + data.order_id;
+    });
+});
+// --------------------------------------------------
+
+
 // Hilfsfunktionen zum Rendern und Anzeigen von Nachrichten
 function showVoucherMessage(message, isSuccess) {
   $('#voucher-message')

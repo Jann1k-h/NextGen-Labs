@@ -37,4 +37,17 @@ class CheckoutController
         echo json_encode($result);
         exit;
     }
+
+    public function placeOrder(): void
+    {
+        header('Content-Type: application/json');
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        $checkoutService = new CheckoutService();
+        $result = $checkoutService->placeOrder($input);
+
+        echo json_encode($result);
+        exit;
+    }
 }

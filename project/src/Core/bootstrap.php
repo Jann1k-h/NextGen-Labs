@@ -20,6 +20,7 @@ require_once REPOSITORIES_PATH . '/UserRepository.php';
 require_once REPOSITORIES_PATH . '/CourseRepository.php';
 require_once REPOSITORIES_PATH . '/CartRepository.php';
 require_once REPOSITORIES_PATH . '/VoucherRepository.php';
+require_once REPOSITORIES_PATH . '/OrderRepository.php';
 
 // Services
 require_once SERVICES_PATH . '/AuthService.php';

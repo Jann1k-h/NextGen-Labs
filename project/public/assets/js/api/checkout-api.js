@@ -22,3 +22,13 @@ function checkVoucherRequest(voucherCode) {
     body: JSON.stringify({ voucher_code: voucherCode })
   }).then(res => res.json());
 }
+
+function placeOrderRequest(orderData) {
+  return fetch('/api/serviceHandler.php?module=checkout&action=placeOrder', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(orderData)
+  }).then(res => res.json());
+}
