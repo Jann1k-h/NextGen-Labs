@@ -3,9 +3,33 @@
 class VoucherController
 {
     // --------------------------------------------------
+    // Prüfen, ob User Admin ist
+    private function requireAdmin(): bool
+    {
+        if (!isset($_SESSION['user_id']) || (int)($_SESSION['is_admin'] ?? 0) !== 1) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Keine Berechtigung.'
+            ]);
+            return false;
+        }
+
+        return true;
+    }
+    // --------------------------------------------------
+
+
+    // --------------------------------------------------
     // Alle Gutscheine laden
     public function get(): void
     {
+        header('Content-Type: application/json');
+
+        if (!$this->requireAdmin()) {
+            return;
+        }
+
         $voucherService = new VoucherService();
         $vouchers = $voucherService->getAllVouchers();
 
@@ -21,6 +45,12 @@ class VoucherController
     // Gutschein erstellen
     public function create(): void
     {
+        header('Content-Type: application/json');
+
+        if (!$this->requireAdmin()) {
+            return;
+        }
+
         $data = json_decode(file_get_contents('php://input'), true);
 
         if (!$data) {
@@ -44,6 +74,12 @@ class VoucherController
     // Gutschein bearbeiten
     public function update(): void
     {
+        header('Content-Type: application/json');
+
+        if (!$this->requireAdmin()) {
+            return;
+        }
+
         $data = json_decode(file_get_contents('php://input'), true);
 
         if (!$data || empty($data['id'])) {
@@ -70,6 +106,12 @@ class VoucherController
     // Gutschein löschen
     public function delete(): void
     {
+        header('Content-Type: application/json');
+
+        if (!$this->requireAdmin()) {
+            return;
+        }
+
         $data = json_decode(file_get_contents('php://input'), true);
 
         if (!$data || empty($data['id'])) {
