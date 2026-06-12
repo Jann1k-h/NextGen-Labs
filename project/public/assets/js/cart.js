@@ -9,6 +9,7 @@ $(document).ready(() => {
 });
 // --------------------------------------------------
 
+
 // --------------------------------------------------
 // Warenkorb-Daten laden und UI aktualisieren
 function loadCartItems() {
@@ -24,6 +25,15 @@ function loadCartItems() {
     });
 }
 // --------------------------------------------------
+
+
+// --------------------------------------------------
+// Warenkorb-Zähler in der Navigation aktualisieren
+function updateCartCounter(count) {
+  $('#cart-count').text(count);
+}
+// --------------------------------------------------
+
 
 // --------------------------------------------------
 // Warenkorb Kurse aktualisieren
@@ -54,24 +64,11 @@ function renderCartItems(items) {
 }
 // --------------------------------------------------
 
+
 // --------------------------------------------------
 // Warenkorb-Overlay-Gesamtpreis aktualisieren
 function updateCartTotal(total) {
   $('#cart-total').text(Number(total).toFixed(2) + ' €');
-}
-// --------------------------------------------------
-
-// --------------------------------------------------
-// Warenkorb-Zähler in der Navigation aktualisieren
-function updateCartCounter(count) {
-  $('#cart-count').text(count);
-}
-// --------------------------------------------------
-
-// --------------------------------------------------
-// Warenkorb-Overlay öffnen
-function openCartOverlay() {
-  bootstrap.Offcanvas.getOrCreateInstance('#cartOffcanvas').show();
 }
 // --------------------------------------------------
 
@@ -110,12 +107,18 @@ $(document).on('click', '.remove-cart-item-btn', function () {
 $(document).on('click', '#checkout-btn', function () {
   goToCheckout();
 });
+// --------------------------------------------------
 
 
 // --------------------------------------------------
-// Warenkorb Aktionen
+// Funktion Warenkorb-Overlay öffnen
+function openCartOverlay() {
+  bootstrap.Offcanvas.getOrCreateInstance('#cartOffcanvas').show();
+}
+// --------------------------------------------------
 
-// Kurs zum Warenkorb hinzufügen
+// --------------------------------------------------
+// Funktion Kurs zum Warenkorb hinzufügen
 function addToCart(courseId) {
   return addToCartRequest(courseId)
     .then(data => {
@@ -128,8 +131,11 @@ function addToCart(courseId) {
       return data;
     });
 }
+// --------------------------------------------------
 
-// Kurs aus dem Warenkorb entfernen
+
+// --------------------------------------------------
+// Funktion Kurs aus dem Warenkorb entfernen
 function removeCartItem(cartItemId) {
   return removeCartItemRequest(cartItemId)
     .then(data => {
@@ -145,8 +151,11 @@ function removeCartItem(cartItemId) {
       return data;
     });
 }
+// --------------------------------------------------
 
-// Zur Kasse gehen
+
+// --------------------------------------------------
+// Funktion zur Kasse gehen
 function goToCheckout() {
   return checkCheckoutRequest()
     .then(data => {
