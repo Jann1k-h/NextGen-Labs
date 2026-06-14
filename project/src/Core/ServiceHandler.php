@@ -34,6 +34,10 @@ class ServiceHandler
                 $controller = new VoucherController();
                 break;
 
+            case 'adminCourses':
+                $controller = new AdminCourseController();
+                break;
+
             default:
                 http_response_code(400);
                 echo json_encode([

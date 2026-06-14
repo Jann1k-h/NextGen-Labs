@@ -34,7 +34,11 @@ function loadVouchers() {
 function renderVouchers(vouchers) {
   if (vouchers.length === 0) {
     $('#voucher-list').html(`
-      <p class="text-muted mb-0">Keine Gutscheine vorhanden.</p>
+      <tr>
+        <td colspan="10" class="text-muted text-center py-4">
+          Keine Gutscheine vorhanden.
+        </td>
+      </tr>
     `);
     return;
   }
@@ -54,8 +58,8 @@ function renderVouchers(vouchers) {
         <td>
           <button class="btn btn-sm btn-outline-primary edit-voucher-btn"
                   data-id="${voucher.id}"
-                  data-code="${voucher.code}"
-                  data-name="${voucher.name}"
+                  data-code="${escapeHtml(voucher.code)}"
+                  data-name="${escapeHtml(voucher.name)}"
                   data-discount-type="${voucher.discount_type}"
                   data-discount-value="${voucher.discount_value}"
                   data-valid-until="${voucher.valid_until ?? ''}"
@@ -77,8 +81,19 @@ function renderVouchers(vouchers) {
 
 
 // --------------------------------------------------
-// Button Events
+// Modal für neuen Gutschein öffnen
+$(document).on('click', '#open-create-voucher-modal-btn', function () {
+  resetVoucherForm();
 
+  $('#voucherModalLabel').text('Gutschein erstellen');
+  $('#voucher-submit-btn').text('Gutschein erstellen');
+
+  openVoucherModal();
+});
+// --------------------------------------------------
+
+
+// --------------------------------------------------
 // Formular absenden: Gutschein erstellen oder bearbeiten
 $(document).on('submit', '#voucher-form', function (e) {
   e.preventDefault();
@@ -101,10 +116,14 @@ $(document).on('submit', '#voucher-form', function (e) {
     createVoucher(voucherData);
   }
 });
+// --------------------------------------------------
 
 
+// --------------------------------------------------
 // Bearbeiten Button
 $(document).on('click', '.edit-voucher-btn', function () {
+  resetVoucherForm();
+
   $('#voucher-id').val($(this).data('id'));
   $('#voucher-code').val($(this).data('code'));
   $('#voucher-name').val($(this).data('name'));
@@ -114,10 +133,15 @@ $(document).on('click', '.edit-voucher-btn', function () {
   $('#voucher-usage-limit').val($(this).data('usage-limit'));
   $('#voucher-is-active').prop('checked', $(this).data('is-active') == 1);
 
+  $('#voucherModalLabel').text('Gutschein bearbeiten');
   $('#voucher-submit-btn').text('Gutschein aktualisieren');
+
+  openVoucherModal();
 });
+// --------------------------------------------------
 
 
+// --------------------------------------------------
 // Löschen Button
 $(document).on('click', '.delete-voucher-btn', function () {
   const voucherId = $(this).data('id');
@@ -128,8 +152,10 @@ $(document).on('click', '.delete-voucher-btn', function () {
 
   deleteVoucher(voucherId);
 });
+// --------------------------------------------------
 
 
+// --------------------------------------------------
 // Formular zurücksetzen
 $(document).on('click', '#voucher-reset-btn', function () {
   resetVoucherForm();
@@ -144,6 +170,7 @@ function createVoucher(voucherData) {
     .then(data => {
       if (data.success) {
         showAuthAlert(data.message, 'success');
+        closeVoucherModal();
         resetVoucherForm();
         loadVouchers();
       } else {
@@ -163,6 +190,7 @@ function updateVoucher(voucherId, voucherData) {
     .then(data => {
       if (data.success) {
         showAuthAlert(data.message, 'success');
+        closeVoucherModal();
         resetVoucherForm();
         loadVouchers();
       } else {
@@ -200,6 +228,23 @@ function resetVoucherForm() {
   $('#voucher-form')[0].reset();
   $('#voucher-is-active').prop('checked', true);
   $('#voucher-submit-btn').text('Gutschein erstellen');
+  $('#voucherModalLabel').text('Gutschein erstellen');
+}
+// --------------------------------------------------
+
+
+// --------------------------------------------------
+// Modal öffnen
+function openVoucherModal() {
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('voucherModal')).show();
+}
+// --------------------------------------------------
+
+
+// --------------------------------------------------
+// Modal schließen
+function closeVoucherModal() {
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('voucherModal')).hide();
 }
 // --------------------------------------------------
 
@@ -212,5 +257,22 @@ function formatDateTimeLocal(value) {
   }
 
   return value.replace(' ', 'T').slice(0, 16);
+}
+// --------------------------------------------------
+
+
+// --------------------------------------------------
+// HTML escapen
+function escapeHtml(value) {
+  if (value === null || value === undefined) {
+    return '';
+  }
+
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
 }
 // --------------------------------------------------
