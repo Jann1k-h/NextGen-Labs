@@ -68,6 +68,19 @@ In nav nur text, logik in nav_user_area
     </div>
   <?php endif; ?>
 
+  <?php if (isset($_SESSION['user_id'])): ?>
+  <div class="dropdown">
+    <button class="btn btn-outline-info btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+      Konto
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end">
+      <li><a class="dropdown-item" href="/profile.php">Bestellhistorie</a></li>
+      <li><a class="dropdown-item" href="customers.php">Konto verwalten</a></li>
+    </ul>
+  </div>
+<?php endif; ?>
+
   <button class="btn btn-outline-success btn-sm" id="logout-button-nav" type="button">
     Logout
   </button>

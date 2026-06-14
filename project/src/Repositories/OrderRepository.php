@@ -162,4 +162,28 @@ class OrderRepository
             'items' => $items
         ];
     }
+
+    public function getOrdersByUserId(int $userId): array
+    {
+        $pdo = getDB();
+
+        $stmt = $pdo->prepare("
+        SELECT
+            id,
+            status,
+            total_amount,
+            discount_amount,
+            voucher_code,
+            created_at
+        FROM orders
+        WHERE user_id = :user_id
+        ORDER BY created_at DESC
+    ");
+
+        $stmt->execute([
+            'user_id' => $userId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
