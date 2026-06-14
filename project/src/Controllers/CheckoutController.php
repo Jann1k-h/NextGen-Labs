@@ -50,4 +50,10 @@ class CheckoutController
         echo json_encode($result);
         exit;
     }
+    public function orderHistory(): array
+    {
+        $service = new CheckoutService();
+
+        return $service->getOrderHistory();
+    }
 }

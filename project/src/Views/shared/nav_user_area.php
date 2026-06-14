@@ -75,7 +75,7 @@ In nav nur text, logik in nav_user_area
     </button>
 
     <ul class="dropdown-menu dropdown-menu-end">
-      <li><a class="dropdown-item" href="courses.php">Bestellhistorie</a></li>
+      <li><a class="dropdown-item" href="/profile.php">Bestellhistorie</a></li>
       <li><a class="dropdown-item" href="customers.php">Konto verwalten</a></li>
     </ul>
   </div>

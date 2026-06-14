@@ -331,7 +331,6 @@ class CheckoutService
                 'message' => 'Bestellung wurde erfolgreich erstellt',
                 'order_id' => $orderId
             ];
-
         } catch (Throwable $e) {
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
@@ -370,6 +369,25 @@ class CheckoutService
             'success' => true,
             'order' => $details['order'],
             'items' => $details['items']
+        ];
+    }
+
+    public function getOrderHistory(): array
+    {
+        if (!isset($_SESSION['user_id'])) {
+            return [
+                'success' => false,
+                'message' => 'Bitte anmelden'
+            ];
+        }
+
+        $userId = (int)$_SESSION['user_id'];
+
+        $repository = new OrderRepository();
+
+        return [
+            'success' => true,
+            'orders' => $repository->getOrdersByUserId($userId)
         ];
     }
 }
