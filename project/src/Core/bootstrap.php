@@ -20,6 +20,7 @@ require_once REPOSITORIES_PATH . '/CourseRepository.php';
 require_once REPOSITORIES_PATH . '/CartRepository.php';
 require_once REPOSITORIES_PATH . '/VoucherRepository.php';
 require_once REPOSITORIES_PATH . '/OrderRepository.php';
+require_once REPOSITORIES_PATH . '/AdminCourseRepository.php';
 
 // Services
 require_once SERVICES_PATH . '/AuthService.php';
@@ -34,3 +35,4 @@ require_once CONTROLLERS_PATH . '/CourseController.php';
 require_once CONTROLLERS_PATH . '/CartController.php';
 require_once CONTROLLERS_PATH . '/CheckoutController.php';
 require_once CONTROLLERS_PATH . '/VoucherController.php';
+require_once CONTROLLERS_PATH . '/AdminCourseController.php';

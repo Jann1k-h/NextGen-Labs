@@ -61,9 +61,9 @@ In nav nur text, logik in nav_user_area
       </button>
 
       <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="courses.php">Kurse</a></li>
-        <li><a class="dropdown-item" href="customers.php">Kunden</a></li>
-        <li><a class="dropdown-item" href="vouchers.php">Gutscheine</a></li>
+        <li><a class="dropdown-item" href="admin_courses.php">Kurse</a></li>
+        <li><a class="dropdown-item" href="admin_customers.php">Kunden</a></li>
+        <li><a class="dropdown-item" href="admin_vouchers.php">Gutscheine</a></li>
       </ul>
     </div>
   <?php endif; ?>
