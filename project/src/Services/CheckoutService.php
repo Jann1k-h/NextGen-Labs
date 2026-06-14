@@ -372,22 +372,42 @@ class CheckoutService
         ];
     }
 
-    public function getOrderHistory(): array
+    // --------------------------------------------------
+    // Bestellhistorie laden
+    public function getOrderHistory(?int $requestedUserId = null): array
     {
         if (!isset($_SESSION['user_id'])) {
             return [
                 'success' => false,
-                'message' => 'Bitte anmelden'
+                'message' => 'Bitte anmelden',
+                'orders' => []
             ];
         }
 
         $userId = (int)$_SESSION['user_id'];
 
+        // Wenn keine fremde user_id übergeben wurde, eigene Historie laden
+        if ($requestedUserId === null || $requestedUserId <= 0) {
+            $targetUserId = $userId;
+        } else {
+            // Fremde Historie darf nur Admin sehen
+            if ((int)($_SESSION['is_admin'] ?? 0) !== 1) {
+                return [
+                    'success' => false,
+                    'message' => 'Keine Berechtigung',
+                    'orders' => []
+                ];
+            }
+
+            $targetUserId = $requestedUserId;
+        }
+
         $repository = new OrderRepository();
 
         return [
             'success' => true,
-            'orders' => $repository->getOrdersByUserId($userId)
+            'orders' => $repository->getOrdersByUserId($targetUserId)
         ];
     }
+    // --------------------------------------------------
 }

@@ -30,12 +30,20 @@ class ServiceHandler
                 $controller = new CheckoutController();
                 break;
 
+            case 'account':
+                $controller = new AccountController();
+                break;
+
             case 'voucher':
                 $controller = new VoucherController();
                 break;
 
             case 'adminCourses':
                 $controller = new AdminCourseController();
+                break;
+
+            case 'adminCustomers':
+                $controller = new AdminCustomerController();
                 break;
 
             default:

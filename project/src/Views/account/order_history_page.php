@@ -4,7 +4,13 @@
         Bestellhistorie
     </h2>
 
-    <?php if (empty($result['orders'])): ?>
+    <?php if (!empty($result['success']) && $result['success'] === false): ?>
+
+        <div class="alert alert-danger">
+            <?= htmlspecialchars($result['message'] ?? 'Bestellhistorie konnte nicht geladen werden.') ?>
+        </div>
+
+    <?php elseif (empty($result['orders'])): ?>
 
         <div class="alert alert-info">
             Sie haben noch keine Bestellungen.
@@ -33,7 +39,7 @@
                         <tr>
 
                             <td>
-                                #<?= $order['id'] ?>
+                                #<?= htmlspecialchars($order['id']) ?>
                             </td>
 
                             <td>
@@ -61,7 +67,7 @@
 
                             <td>
                                 <?= number_format(
-                                    $order['total_amount'],
+                                    (float)$order['total_amount'],
                                     2,
                                     ',',
                                     '.'
@@ -70,8 +76,8 @@
 
                             <td>
 
-                                <a href="/order-success.php?order_id=<?= $order['id'] ?>"
-                                    class="btn btn-outline-primary btn-sm">
+                                <a href="/order-success.php?order_id=<?= htmlspecialchars($order['id']) ?>"
+                                   class="btn btn-outline-primary btn-sm" target="_blank">
                                     Details
                                 </a>
 

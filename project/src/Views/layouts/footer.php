@@ -12,7 +12,9 @@ integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbIT
 <script src="<?= BASE_URL ?>/assets/js/api/courses-api.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/api/checkout-api.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/api/voucher-api.js"></script>
+<script src="<?= BASE_URL ?>/assets/js/api/account-api.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/api/admin-courses-api.js"></script>
+<script src="<?= BASE_URL ?>/assets/js/api/admin-customers-api.js"></script>
 
 <script src="<?= BASE_URL ?>/assets/js/ui.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/auth.js"></script>
@@ -22,6 +24,10 @@ integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbIT
 <script src="<?= BASE_URL ?>/assets/js/checkout.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/theme.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/vouchers.js"></script>
+<script src="<?= BASE_URL ?>/assets/js/account.js"></script>
 <script src="<?= BASE_URL ?>/assets/js/admin/courses-admin.js"></script>
+<script src="<?= BASE_URL ?>/assets/js/admin/customers-admin.js"></script>
+
+
 </body>
 </html>

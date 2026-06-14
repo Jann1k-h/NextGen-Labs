@@ -50,10 +50,14 @@ class CheckoutController
         echo json_encode($result);
         exit;
     }
-    public function orderHistory(): array
+    
+    // --------------------------------------------------
+    // Bestellhistorie laden
+    public function orderHistory(?int $requestedUserId = null): array
     {
         $service = new CheckoutService();
 
-        return $service->getOrderHistory();
+        return $service->getOrderHistory($requestedUserId);
     }
+    // --------------------------------------------------
 }

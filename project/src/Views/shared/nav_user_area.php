@@ -22,7 +22,6 @@ In nav nur text, logik in nav_user_area
 -->
 
 <a class="btn btn-outline-primary btn-sm" href="/">Home</a>
-<a class="btn btn-outline-primary btn-sm" href="/kurse.php">Kurse</a>
 
 <a href="#" 
    id="cart-button-nav"
@@ -50,10 +49,6 @@ In nav nur text, logik in nav_user_area
     Name: <?= $_SESSION['username'] ?>
   </span>
 
-  <a href="/profile.php" class="btn btn-outline-primary btn-sm">
-    <i class="bi bi-person"></i>
-  </a>
-
   <?php if (!empty($_SESSION['is_admin'])): ?>
     <div class="dropdown">
       <button class="btn btn-outline-danger btn-sm dropdown-toggle" data-bs-toggle="dropdown">
@@ -75,8 +70,8 @@ In nav nur text, logik in nav_user_area
     </button>
 
     <ul class="dropdown-menu dropdown-menu-end">
-      <li><a class="dropdown-item" href="/profile.php">Bestellhistorie</a></li>
-      <li><a class="dropdown-item" href="customers.php">Konto verwalten</a></li>
+      <li><a class="dropdown-item" href="orders.php">Bestellhistorie</a></li>
+      <li><a class="dropdown-item" href="account.php">Konto verwalten</a></li>
     </ul>
   </div>
 <?php endif; ?>
