@@ -128,21 +128,25 @@ class CheckoutService
             ];
         }
 
-        if (!$voucher->is_active) {
+        if ((int)$voucher['is_active'] !== 1) {
             return [
                 'success' => false,
                 'message' => 'Dieser Gutschein ist nicht aktiv'
             ];
         }
 
-        if ($voucher->valid_until !== null && strtotime($voucher->valid_until) < time()) {
+        if ($voucher['valid_until'] !== null && strtotime($voucher['valid_until']) < time()) {
             return [
                 'success' => false,
                 'message' => 'Dieser Gutschein ist abgelaufen'
             ];
         }
 
-        if ($voucher->usage_limit !== null && $voucher->used_count >= $voucher->usage_limit) {
+        if (
+            $voucher['usage_limit'] !== null &&
+            $voucher['usage_limit'] !== '' &&
+            (int)$voucher['used_count'] >= (int)$voucher['usage_limit']
+        ) {
             return [
                 'success' => false,
                 'message' => 'Dieser Gutschein wurde bereits zu oft verwendet'
@@ -151,10 +155,10 @@ class CheckoutService
 
         $discountAmount = 0;
 
-        if ($voucher->discount_type === 'percent') {
-            $discountAmount = $cartTotal * ($voucher->discount_value / 100);
-        } elseif ($voucher->discount_type === 'fixed') {
-            $discountAmount = $voucher->discount_value;
+        if ($voucher['discount_type'] === 'percent') {
+            $discountAmount = $cartTotal * ((float)$voucher['discount_value'] / 100);
+        } elseif ($voucher['discount_type'] === 'fixed') {
+            $discountAmount = (float)$voucher['discount_value'];
         }
 
         if ($discountAmount > $cartTotal) {
@@ -167,11 +171,11 @@ class CheckoutService
             'success' => true,
             'message' => 'Gutscheincode ist gültig',
             'voucher' => [
-                'id' => $voucher->id,
-                'code' => $voucher->code,
-                'name' => $voucher->name,
-                'discount_type' => $voucher->discount_type,
-                'discount_value' => $voucher->discount_value
+                'id' => (int)$voucher['id'],
+                'code' => $voucher['code'],
+                'name' => $voucher['name'],
+                'discount_type' => $voucher['discount_type'],
+                'discount_value' => (float)$voucher['discount_value']
             ],
             'subtotal' => round($cartTotal, 2),
             'discount_amount' => round($discountAmount, 2),
@@ -281,9 +285,9 @@ class CheckoutService
                 'billing_payment_info' => $paymentMethod,
                 'status' => 'pending',
                 'total_amount' => round($finalTotal, 2),
-                'voucher_id' => $voucher ? $voucher->id : null,
+                'voucher_id' => $voucher ? (int)$voucher['id'] : null,
                 'discount_amount' => round($discountAmount, 2),
-                'voucher_code' => $voucher ? $voucher->code : null
+                'voucher_code' => $voucher ? $voucher['code'] : null
             ]);
 
             foreach ($items as $item) {
@@ -315,7 +319,7 @@ class CheckoutService
             }
 
             if ($voucher !== null) {
-                $voucherRepository->increaseUsedCount((int)$voucher->id);
+                $voucherRepository->increaseUsedCount((int)$voucher['id']);
             }
 
             $cartRepository->clearForUser($userId);

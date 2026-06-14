@@ -13,7 +13,6 @@ require_once CORE_PATH . '/ServiceHandler.php';
 
 // Models
 require_once MODELS_PATH . '/User.php';
-require_once MODELS_PATH . '/Voucher.php';
 
 // Repositories
 require_once REPOSITORIES_PATH . '/UserRepository.php';
@@ -26,6 +25,7 @@ require_once REPOSITORIES_PATH . '/OrderRepository.php';
 require_once SERVICES_PATH . '/AuthService.php';
 require_once SERVICES_PATH . '/CartService.php';
 require_once SERVICES_PATH . '/CheckoutService.php';
+require_once SERVICES_PATH . '/VoucherService.php';
 
 // Controllers
 require_once CONTROLLERS_PATH . '/AuthController.php';
@@ -33,3 +33,4 @@ require_once CONTROLLERS_PATH . '/NavController.php';
 require_once CONTROLLERS_PATH . '/CourseController.php';
 require_once CONTROLLERS_PATH . '/CartController.php';
 require_once CONTROLLERS_PATH . '/CheckoutController.php';
+require_once CONTROLLERS_PATH . '/VoucherController.php';

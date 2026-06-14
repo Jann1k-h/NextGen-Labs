@@ -6,47 +6,52 @@ class ServiceHandler
 {
     public function handle(string $module, string $action): void
     {
+        header('Content-Type: application/json');
+
         // Aufruf der entsprechenden Controller-Methode, wenn man zb von Login kommt ist action = login und dann wird die login Methode im AuthController aufgerufen
         switch ($module) {
             case 'auth':
                 $controller = new AuthController();
-
-                $controller->$action();
                 break;
 
             case 'nav':
                 $controller = new NavController();
-
-                $controller->$action();
                 break;
 
             case 'courses':
                 $controller = new CoursesController();
-
-                $controller->$action();
                 break;
 
             case 'cart':
                 $controller = new CartController();
-
-                $controller->$action();
                 break;
 
             case 'checkout':
                 $controller = new CheckoutController();
+                break;
 
-                $controller->$action();
+            case 'voucher':
+                $controller = new VoucherController();
                 break;
 
             default:
                 http_response_code(400);
-                header('Content-Type: application/json');
                 echo json_encode([
                     'success' => false,
                     'message' => 'Unbekanntes Modul'
                 ]);
                 exit;
         }
-        
+
+        if (!method_exists($controller, $action)) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Unbekannte Aktion'
+            ]);
+            exit;
+        }
+
+        $controller->$action();
     }
 }

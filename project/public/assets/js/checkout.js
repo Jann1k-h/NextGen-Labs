@@ -103,7 +103,7 @@ function updateVoucherDiscount(data) {
 }
 // --------------------------------------------------
 
-// Wichtig das vorausfüllen bereits gespeicherter daten passiert am Ende der Funktion
+// Wichtig: das vorausfüllen bereits gespeicherter daten passiert erst am Ende der Funktion
 function renderCheckoutDetails(data) {
   const user = data.user;
   const items = data.items;
