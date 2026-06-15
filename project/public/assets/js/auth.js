@@ -2,13 +2,18 @@
 // Auth UI + Validation + Events
 // --------------------------------------------------
 
-// Funktion zum Zurücksetzen der Fehlermeldungen im Login-Formular
+
+// --------------------------------------------------
+// Login-Fehler zurücksetzen
 function resetLoginErrors() {
     $('#login-identifier-error').text('');
     $('#login-password-error').text('');
 }
+// --------------------------------------------------
 
-// Funktion zum Zurücksetzen der Fehlermeldungen im Registrierung-Formular
+
+// --------------------------------------------------
+// Registrierungsfehler zurücksetzen
 function resetRegisterErrors() {
     $('#register-title-error').text('');
     $('#register-firstname-error').text('');
@@ -22,22 +27,31 @@ function resetRegisterErrors() {
     $('#register-password-confirm-error').text('');
     // $('#register-payment-info-error').text('');
 }
+// --------------------------------------------------
 
-// Button rechts oben in der Navigation zum Öffnen des Login-Modals
+
+// --------------------------------------------------
+// Login-Modal öffnen
 $(document).on('click', '#login-button-nav', function() {
     resetLoginErrors();
     $("#login-modal").modal("show");
 });
+// --------------------------------------------------
 
-// Button im Login-Modal zum Öffnen des Registrierungs-Modals
+
+// --------------------------------------------------
+// Wechsel von Login zu Registierung
 $(document).on('click', '.register-button-modal', function() {
     resetRegisterErrors();
 
     $("#login-modal").modal("hide");
     $("#register-modal").modal("show");
 });
+// --------------------------------------------------
 
-// Button im Registrierungs-Modal zum Öffnen des Login-Modals
+
+// --------------------------------------------------
+// Wechsel von Registierung zu Login
 $(document).on('click', '.login-button-modal', function() {
     resetLoginErrors();
     resetRegisterErrors();
@@ -89,7 +103,8 @@ $(document).on('click', '#login-submit-button-modal', function() {
             const categoryId = $('#category-select').val();
 
             // Prüfen, ob Elemente von Kursliste vorhanden sind mit length. Wenn length > 0, dann existieren Elemente, ansonsten nicht.
-            // Das ist notwendig, damit die Funktion loadCourses() nicht auf Seiten ohne Kursliste (z.B. Details-Seite) aufgerufen wird, da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
+            // Das ist notwendig, damit die Funktion loadCourses() nicht auf Seiten ohne Kursliste (z.B. Details-Seite) aufgerufen wird, 
+            // da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
             if ($('#course-list').length) {
                 loadCourses(categoryId);
             }
@@ -97,7 +112,8 @@ $(document).on('click', '#login-submit-button-modal', function() {
             const courseId = $('#course-details').data('course-id');
 
             // Prüfen, ob Elemente von Kursdetails vorhanden sind mit length. Wenn length > 0, dann existieren Elemente, ansonsten nicht.
-            // Das ist notwendig, damit die Funktion loadCourseDetails() nicht auf Seiten ohne Kursdetails (z.B. Startseite) aufgerufen wird, da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
+            // Das ist notwendig, damit die Funktion loadCourseDetails() nicht auf Seiten ohne Kursdetails (z.B. Startseite) aufgerufen wird, 
+            // da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
             if (courseId) {
                 loadCourseDetails(courseId);
             }
@@ -212,7 +228,8 @@ $(document).on('click', '#register-submit-button-modal', function() {
 
             showAuthAlert(data.message, 'success');
 
-            // kein reloadUserArea, da der Nutzer nach der Registrierung nicht automatisch eingeloggt wird, sondern erst nach dem Login-Modal, damit er direkt mit seinem neuen Account einloggen kann. Daher wird hier nur das Login-Modal geöffnet und die User-Area erst nach dem Login aktualisiert.
+            // kein reloadUserArea, da der Nutzer nach der Registrierung nicht automatisch eingeloggt wird, sondern erst nach dem Login-Modal, 
+            // damit er direkt mit seinem neuen Account einloggen kann. Daher wird hier nur das Login-Modal geöffnet und die User-Area erst nach dem Login aktualisiert.
             // reloadUserArea();
 
             $("#register-modal").modal("hide");
@@ -256,7 +273,8 @@ $(document).on('click', '#logout-button-nav', function() {
             const categoryId = $('#category-select').val();
 
             // Prüfen, ob Elemente von Kursliste vorhanden sind mit length. Wenn length > 0, dann existieren Elemente, ansonsten nicht.
-            // Das ist notwendig, damit die Funktion loadCourses() nicht auf Seiten ohne Kursliste (z.B. Details-Seite) aufgerufen wird, da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
+            // Das ist notwendig, damit die Funktion loadCourses() nicht auf Seiten ohne Kursliste (z.B. Details-Seite) aufgerufen wird, 
+            // da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
             if ($('#course-list').length) {
                 loadCourses(categoryId);
             }
@@ -264,7 +282,8 @@ $(document).on('click', '#logout-button-nav', function() {
             const courseId = $('#course-details').data('course-id');
 
             // Prüfen, ob Elemente von Kursdetails vorhanden sind mit length. Wenn length > 0, dann existieren Elemente, ansonsten nicht.
-            // Das ist notwendig, damit die Funktion loadCourseDetails() nicht auf Seiten ohne Kursdetails (z.B. Startseite) aufgerufen wird, da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
+            // Das ist notwendig, damit die Funktion loadCourseDetails() nicht auf Seiten ohne Kursdetails (z.B. Startseite) aufgerufen wird, 
+            // da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
             if (courseId) {
                 loadCourseDetails(courseId);
             }

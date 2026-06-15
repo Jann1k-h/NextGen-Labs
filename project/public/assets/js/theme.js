@@ -1,3 +1,10 @@
+// --------------------------------------------------
+// Theme Toggle (Dark / Light Mode)
+// --------------------------------------------------
+
+
+// --------------------------------------------------
+// Theme wechseln per Toggle
 $(document).on('change', '#theme-toggle', function() {
 
     const theme = $(this).is(':checked') ? 'dark' : 'light';
@@ -13,7 +20,11 @@ $(document).on('change', '#theme-toggle', function() {
     localStorage.setItem('theme', theme);
 
 });
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Theme beim laden der Seite initialisieren
 document.addEventListener('DOMContentLoaded', () => {
 
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -32,3 +43,4 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#theme-toggle').prop('checked', savedTheme === 'dark');
 
 });
+// --------------------------------------------------

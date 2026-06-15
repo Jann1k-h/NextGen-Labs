@@ -2,6 +2,9 @@
 // Kursliste, Filter, Kategorien und Rendering
 // --------------------------------------------------
 
+
+// --------------------------------------------------
+// Initalisierung beim Laden der Seite
 document.addEventListener("DOMContentLoaded", () => {
     if ($('#course-list').length) {
         loadCourses();
@@ -11,26 +14,45 @@ document.addEventListener("DOMContentLoaded", () => {
         loadCoursesCategories();
     }
 });
+// --------------------------------------------------
 
-// Funktion zum Laden der Kurse vom Backend und Rendern der Ergebnisse
+
+// --------------------------------------------------
+// Laden der Kurse vom Backend und Rendern der Ergebnisse
 function loadCourses(categoryId = '', onlyFree = false, searchQuery = '') {
   getCoursesRequest(categoryId, onlyFree, searchQuery)
     .then(data => renderCoursesList(data));
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
 // AJAX: Kategorien vom Backend holen und ins Dropdown rendern
 function loadCoursesCategories() {
     getCoursesCategoriesRequest()
         .then(data => renderCoursesCategories(data));
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Filter-Events
+// --------------------------------------------------
+
+
+// --------------------------------------------------
 // Eventlistener für Kategorie- und Free-Filter
 $(document).on("change", "#category-select, #free-courses-checkbox", loadCoursesFromFilters);
+// --------------------------------------------------
 
+
+// --------------------------------------------------
 // Eventlistener für Live-Suche
 $(document).on("keyup", "#course-search", loadCoursesFromFilters);
 
-// Funktion zum Neuladen der Kurse
+
+// --------------------------------------------------
+// Kurse nach Filtern neu laden
 function loadCoursesFromFilters() {
     loadCourses(
         $("#category-select").val(),
@@ -38,7 +60,11 @@ function loadCoursesFromFilters() {
         $("#course-search").val()
     );
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Kurse rendern
 function renderCoursesList(data) {
   // Vorhandene Kurse entfernen
   $('#course-list').empty();
@@ -98,7 +124,11 @@ function renderCoursesList(data) {
     `);
   });
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Kategorien rendern
 function renderCoursesCategories(data) {
   console.log(data);
 
@@ -111,3 +141,4 @@ function renderCoursesCategories(data) {
   // Vorhandene Kurse entfernen
   //$('#course-list').empty();
 }
+// --------------------------------------------------

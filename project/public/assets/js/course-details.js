@@ -2,6 +2,8 @@
 // Kursdetails laden und rendern
 // --------------------------------------------------
 
+// --------------------------------------------------
+// Beim Laden der Seite Kursdetails initalisieren
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("course-details");
 
@@ -18,7 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadCourseDetails(courseId);
 });
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Kursdetails laden
 function loadCourseDetails(courseId) {
   getCourseDetailsRequest(courseId)
     .then(data => {
@@ -34,7 +40,11 @@ function loadCourseDetails(courseId) {
       showAuthAlert('Fehler beim Laden des Kurses.', 'danger');
     });
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Kursdetails rendern
 function renderCourseDetails(data) {
   $('#course-details').html(`
 
@@ -111,3 +121,4 @@ function renderCourseDetails(data) {
         </div>
       `);
 }
+// --------------------------------------------------

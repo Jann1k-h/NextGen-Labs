@@ -1,3 +1,10 @@
+// --------------------------------------------------
+// Cart API Requests
+// --------------------------------------------------
+
+
+// --------------------------------------------------
+// Kurs zum Warenkorb hinzufügen
 function addToCartRequest(courseId) {
   return fetch('/api/serviceHandler.php?module=cart&action=add', {
     method: 'POST',
@@ -9,12 +16,19 @@ function addToCartRequest(courseId) {
     })
   }).then(res => res.json());
 }
+// --------------------------------------------------
 
+// --------------------------------------------------
+// Warenkorb-Inhalt abrufen
 function getCartItemsRequest() {
   return fetch('/api/serviceHandler.php?module=cart&action=get')
     .then(res => res.json());
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Eintrag aus dem Warenkorb entfernen
 function removeCartItemRequest(cartItemId) {
   return fetch('/api/serviceHandler.php?module=cart&action=remove', {
     method: 'POST',
@@ -26,3 +40,4 @@ function removeCartItemRequest(cartItemId) {
     })
   }).then(res => res.json());
 }
+// --------------------------------------------------
