@@ -4,12 +4,12 @@
 
 class AuthService
 {
-    private UserRepository $userRepository;
+    private AuthRepository $userRepository;
 
     // Funktion wird automatisch aufgerufen, sobald ein Objekt der Klasse erstellt wird, wie zb in Zeile 68
     public function __construct()
     {
-        $this->userRepository = new UserRepository();
+        $this->userRepository = new AuthRepository();
     }
 
     public function login(string $identifier, string $password, bool $rememberMe): array
@@ -38,7 +38,7 @@ class AuthService
                 ];
             }
 
-            if (!$user->isActive) {
+            if ((int)$user['is_active'] !== 1) {
                 return [
                     'success' => false,
                     'message' => 'Account ist deaktiviert'
@@ -46,7 +46,7 @@ class AuthService
             }
 
             // password_verify() vergleicht das eingegebene Passwort mit dem in der DB gespeicherten Hasht Passwort
-            if (!password_verify($password, $user->password)) {
+            if (!password_verify($password, $user['password'])) {
                 return [
                     'success' => false,
                     'message' => 'Falsches Passwort'
@@ -59,30 +59,31 @@ class AuthService
                 $expires = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); // 30 Tage
 
                 // Speichere den Token in der DB
-                $this->userRepository->updateRememberToken($user->id, $token, $expires);
+                $this->userRepository->updateRememberToken((int)$user['id'], $token, $expires);
 
                 // Setze den Token als Cookie
                 setcookie('remember_token', $token, time() + (30 * 24 * 60 * 60), "/");
             } else {
                 // Wenn "Remember Me" nicht ausgewählt ist, lösche den Token aus der DB und dem Cookie
-                $this->userRepository->updateRememberToken($user->id, null, null);
+                $this->userRepository->updateRememberToken((int)$user['id'], null, null);
 
                 setcookie('remember_token', '', time() - 3600, "/");
             }
 
-            $_SESSION['user_id'] = $user->id;
-            $_SESSION['username'] = $user->username;
-            $_SESSION['is_admin'] = $user->isAdmin;
+            $_SESSION['user_id'] = (int)$user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['is_admin'] = (int)$user['is_admin'];
 
             $cartService = new CartService();
-            $cartService->mergeGuestCartIntoUserCart($user->id);
+            $cartService->mergeGuestCartIntoUserCart((int)$user['id']);
 
             return [
                 'success' => true,
                 'message' => 'Erfolgreich eingeloggt',
-                'username' => $user->username,
-                'is_admin' => $user->isAdmin
+                'username' => $user['username'],
+                'is_admin' => (int)$user['is_admin']
             ];
+
         } catch (PDOException $e) {
             return [
                 'success' => false,

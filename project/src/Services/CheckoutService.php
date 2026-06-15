@@ -40,10 +40,10 @@ class CheckoutService
 
         $userId = (int) $_SESSION['user_id'];
 
-        $userRepository = new UserRepository();
+        $checkoutRepository = new CheckoutRepository();
         $cartRepository = new CartRepository();
 
-        $user = $userRepository->getCheckoutDataById($userId);
+        $user = $checkoutRepository->getCheckoutDataById($userId);
         $items = $cartRepository->getByUser($userId);
 
         if (!$user) {
@@ -118,7 +118,7 @@ class CheckoutService
             ];
         }
 
-        $voucherRepository = new VoucherRepository();
+        $voucherRepository = new AdminVoucherRepository();
         $voucher = $voucherRepository->findByCode($voucherCode);
 
         if ($voucher === null) {
@@ -237,7 +237,7 @@ class CheckoutService
 
             $cartRepository = new CartRepository();
             $orderRepository = new OrderRepository();
-            $voucherRepository = new VoucherRepository();
+            $voucherRepository = new AdminVoucherRepository();
 
             $items = $cartRepository->getByUser($userId);
 

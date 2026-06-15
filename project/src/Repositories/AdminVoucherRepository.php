@@ -1,6 +1,6 @@
 <?php
 
-class VoucherRepository
+class AdminVoucherRepository
 {
     // --------------------------------------------------
     // Gutschein anhand Code finden

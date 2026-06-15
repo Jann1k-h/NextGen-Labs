@@ -16,7 +16,6 @@ class AuthController
         $authService = new AuthService();
         $result = $authService->login($identifier, $password, $rememberMe);
 
-        header('Content-Type: application/json');
         echo json_encode($result);
         exit;
     }
@@ -41,7 +40,6 @@ class AuthController
         $authService = new AuthService();
         $result = $authService->register($title, $firstname, $lastname, $username, $address, $zipcode, $city, $email, $password, $confirmPassword, $paymentInfo);
         
-        header('Content-Type: application/json');
         echo json_encode($result);
         exit;
 
@@ -52,7 +50,6 @@ class AuthController
         $authService = new AuthService();
         $result = $authService->logout();
 
-        header('Content-Type: application/json');
         echo json_encode($result);
         exit;
     }
