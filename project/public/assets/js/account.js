@@ -7,6 +7,12 @@ let originalAccountData = null;
 // --------------------------------------------------
 // Beim Laden der Seite Account-Daten laden
 $(document).ready(() => {
+
+  // Nur wenn account-form-course-Element vorhanden ist Daten laden, damit kein Alert kommt
+  if ($('#account-form').length === 0) {
+    return;
+  }
+
   loadAccountData();
 });
 // --------------------------------------------------

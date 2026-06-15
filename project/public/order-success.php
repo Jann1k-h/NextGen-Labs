@@ -28,8 +28,8 @@ if ($orderId <= 0) {
 
 // --------------------------------------------------
 // Business Logic
-$service = new CheckoutService();
-$result = $service->getOrderDetails($orderId);
+$orderService = new OrderService();
+$result = $orderService->getOrderDetails($orderId, (int)$_SESSION['user_id']);
 // --------------------------------------------------
 
 
@@ -37,7 +37,10 @@ $result = $service->getOrderDetails($orderId);
 // Views
 include_once VIEWS_PATH . '/layouts/header.php';
 include_once VIEWS_PATH . '/layouts/nav.php';
+
+// CONTENT
 include_once VIEWS_PATH . '/checkout/order-success.php';
+
 include_once VIEWS_PATH . '/layouts/footer.php';
 // --------------------------------------------------
 ?>

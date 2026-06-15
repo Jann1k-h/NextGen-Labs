@@ -2,8 +2,11 @@
 
 class CheckoutService
 {
+    // --------------------------------------------------
+    // Prüfen, ob User zur Kasse gehen darf
     public function checkCheckout(): array
     {
+        // Checkout ist nur für eingeloggte User erlaubt
         if (!isset($_SESSION['user_id'])) {
             return [
                 'success' => false,
@@ -13,9 +16,11 @@ class CheckoutService
 
         $userId = (int) $_SESSION['user_id'];
 
+        // Warenkorb des Users laden
         $cartRepository = new CartRepository();
         $items = $cartRepository->getByUser($userId);
 
+        // Prüfen, ob der Warenkorb leer ist
         if (count($items) === 0) {
             return [
                 'success' => false,
@@ -28,9 +33,14 @@ class CheckoutService
             'message' => 'Weiterleitung zur Kasse'
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Checkout-Daten laden
     public function getCheckoutData(): array
     {
+        // Prüfen, ob der User eingeloggt ist
         if (!isset($_SESSION['user_id'])) {
             return [
                 'success' => false,
@@ -40,12 +50,15 @@ class CheckoutService
 
         $userId = (int) $_SESSION['user_id'];
 
+        // Repositories erstellen
         $checkoutRepository = new CheckoutRepository();
         $cartRepository = new CartRepository();
 
+        // Userdaten und Warenkorb laden
         $user = $checkoutRepository->getCheckoutDataById($userId);
         $items = $cartRepository->getByUser($userId);
 
+        // Prüfen, ob der User gefunden wurde
         if (!$user) {
             return [
                 'success' => false,
@@ -53,6 +66,7 @@ class CheckoutService
             ];
         }
 
+        // Prüfen, ob der Warenkorb leer ist
         if (count($items) === 0) {
             return [
                 'success' => false,
@@ -60,26 +74,10 @@ class CheckoutService
             ];
         }
 
-        /* $items ist ein Array, was folgendermaßen aufgebaut ist:
-        * [
-        *   [
-        *     'course_id' => 1,
-        *     'course_name' => 'Kurs 1',
-        *     'price' => 19.99,
-        *     'quantity' => 2
-        *   ],
-        *   [
-        *     'course_id' => 2,
-        *     'course_name' => 'Kurs 2',
-        *     'price' => 29.99,
-        *     'quantity' => 1
-        *   ]
-        * ]
-        *
-        */
-
+        // Gesamtpreis des Warenkorbs berechnen
         $total = $cartRepository->calculateTotalByUser($userId);
 
+        // Checkout-Daten zurückgeben
         return [
             'success' => true,
             'user' => $user,
@@ -87,9 +85,14 @@ class CheckoutService
             'total' => $total
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Gutschein prüfen
     public function checkVoucher(string $voucherCode): array
     {
+        // Prüfen, ob der User eingeloggt ist
         if (!isset($_SESSION['user_id'])) {
             return [
                 'success' => false,
@@ -99,9 +102,11 @@ class CheckoutService
 
         $userId = (int) $_SESSION['user_id'];
 
+        // Warenkorb-Summe laden
         $cartRepository = new CartRepository();
         $cartTotal = $cartRepository->calculateTotalByUser($userId);
 
+        // Gutschein kann nur geprüft werden, wenn der Warenkorb nicht leer ist
         if ($cartTotal <= 0) {
             return [
                 'success' => false,
@@ -109,6 +114,7 @@ class CheckoutService
             ];
         }
 
+        // Gutscheincode bereinigen
         $voucherCode = trim($voucherCode);
 
         if ($voucherCode === '') {
@@ -118,9 +124,11 @@ class CheckoutService
             ];
         }
 
+        // Gutschein anhand des Codes suchen
         $voucherRepository = new AdminVoucherRepository();
         $voucher = $voucherRepository->findByCode($voucherCode);
 
+        // Prüfen, ob der Gutschein existiert
         if ($voucher === null) {
             return [
                 'success' => false,
@@ -128,6 +136,7 @@ class CheckoutService
             ];
         }
 
+        // Prüfen, ob der Gutschein aktiv ist
         if ((int)$voucher['is_active'] !== 1) {
             return [
                 'success' => false,
@@ -135,6 +144,7 @@ class CheckoutService
             ];
         }
 
+        // Prüfen, ob der Gutschein abgelaufen ist
         if ($voucher['valid_until'] !== null && strtotime($voucher['valid_until']) < time()) {
             return [
                 'success' => false,
@@ -142,6 +152,7 @@ class CheckoutService
             ];
         }
 
+        // Prüfen, ob das Nutzungslimit erreicht wurde
         if (
             $voucher['usage_limit'] !== null &&
             $voucher['usage_limit'] !== '' &&
@@ -153,6 +164,7 @@ class CheckoutService
             ];
         }
 
+        // Rabattbetrag berechnen
         $discountAmount = 0;
 
         if ($voucher['discount_type'] === 'percent') {
@@ -161,10 +173,12 @@ class CheckoutService
             $discountAmount = (float)$voucher['discount_value'];
         }
 
+        // Rabatt darf nicht höher als der Warenkorbwert sein
         if ($discountAmount > $cartTotal) {
             $discountAmount = $cartTotal;
         }
 
+        // Endbetrag berechnen
         $finalTotal = $cartTotal - $discountAmount;
 
         return [
@@ -182,11 +196,14 @@ class CheckoutService
             'final_total' => round($finalTotal, 2)
         ];
     }
+    // --------------------------------------------------
 
 
-
+    // --------------------------------------------------
+    // Bestellung erstellen
     public function placeOrder(array $input): array
     {
+        // Prüfen, ob der User eingeloggt ist
         if (!isset($_SESSION['user_id'])) {
             return [
                 'success' => false,
@@ -196,6 +213,7 @@ class CheckoutService
 
         $userId = (int)$_SESSION['user_id'];
 
+        // Rechnungsdaten aus dem Request lesen
         $billingTitle = trim($input['billing_title'] ?? '');
         $billingFirstname = trim($input['billing_firstname'] ?? '');
         $billingLastname = trim($input['billing_lastname'] ?? '');
@@ -207,6 +225,7 @@ class CheckoutService
         $voucherCode = trim($input['voucher_code'] ?? '');
         $participants = $input['participants'] ?? [];
 
+        // Prüfen, ob alle Rechnungsdaten ausgefüllt wurden
         if (
             $billingTitle === '' ||
             $billingFirstname === '' ||
@@ -223,6 +242,7 @@ class CheckoutService
             ];
         }
 
+        // E-Mail-Adresse validieren
         if (!filter_var($billingEmail, FILTER_VALIDATE_EMAIL)) {
             return [
                 'success' => false,
@@ -233,14 +253,18 @@ class CheckoutService
         $pdo = getDB();
 
         try {
+            // Transaktion starten, damit Bestellung vollständig oder gar nicht gespeichert wird
             $pdo->beginTransaction();
 
+            // Repositories erstellen
             $cartRepository = new CartRepository();
             $orderRepository = new OrderRepository();
             $voucherRepository = new AdminVoucherRepository();
 
+            // Warenkorb laden
             $items = $cartRepository->getByUser($userId);
 
+            // Prüfen, ob der Warenkorb leer ist
             if (count($items) === 0) {
                 $pdo->rollBack();
 
@@ -250,12 +274,14 @@ class CheckoutService
                 ];
             }
 
+            // Zwischensumme berechnen
             $subtotal = $cartRepository->calculateTotalByUser($userId);
 
             $voucher = null;
             $discountAmount = 0.00;
             $finalTotal = $subtotal;
 
+            // Gutschein prüfen und Rabatt übernehmen, falls ein Code eingegeben wurde
             if ($voucherCode !== '') {
                 $voucherResult = $this->checkVoucher($voucherCode);
 
@@ -273,6 +299,7 @@ class CheckoutService
                 $finalTotal = (float)$voucherResult['final_total'];
             }
 
+            // Bestellung erstellen
             $orderId = $orderRepository->createOrder([
                 'user_id' => $userId,
                 'billing_title' => $billingTitle,
@@ -290,11 +317,13 @@ class CheckoutService
                 'voucher_code' => $voucher ? $voucher['code'] : null
             ]);
 
+            // Bestellpositionen aus dem Warenkorb erstellen
             foreach ($items as $item) {
                 $courseId = (int)$item['course_id'];
                 $quantity = (int)$item['quantity'];
                 $price = (float)$item['price'];
 
+                // Teilnehmende Person für diesen Kurs lesen
                 $courseFor = trim($participants[$courseId] ?? '');
 
                 if ($courseFor === '') {
@@ -306,6 +335,7 @@ class CheckoutService
                     ];
                 }
 
+                // Bestellposition speichern
                 $orderRepository->createOrderItem([
                     'order_id' => $orderId,
                     'course_id' => $courseId,
@@ -314,16 +344,19 @@ class CheckoutService
                     'course_for' => $courseFor
                 ]);
 
-                // Lagerbestand reduzieren
+                // Lagerbestand des Kurses reduzieren
                 $cartRepository->reduceCourseStock($courseId, $quantity);
             }
 
+            // Gutschein-Nutzung erhöhen, falls ein Gutschein verwendet wurde
             if ($voucher !== null) {
                 $voucherRepository->increaseUsedCount((int)$voucher['id']);
             }
 
+            // Warenkorb nach erfolgreicher Bestellung leeren
             $cartRepository->clearForUser($userId);
 
+            // Änderungen endgültig speichern
             $pdo->commit();
 
             return [
@@ -332,6 +365,7 @@ class CheckoutService
                 'order_id' => $orderId
             ];
         } catch (Throwable $e) {
+            // Bei Fehlern alle Änderungen rückgängig machen
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
@@ -341,73 +375,6 @@ class CheckoutService
                 'message' => 'Fehler beim Erstellen der Bestellung: ' . $e->getMessage()
             ];
         }
-    }
-
-
-    public function getOrderDetails(int $orderId): array
-    {
-        if (!isset($_SESSION['user_id'])) {
-            return [
-                'success' => false,
-                'message' => 'Bitte melden Sie sich zuerst an'
-            ];
-        }
-
-        $userId = (int)$_SESSION['user_id'];
-
-        $orderRepository = new OrderRepository();
-        $details = $orderRepository->getOrderDetailsById($orderId, $userId);
-
-        if (!$details) {
-            return [
-                'success' => false,
-                'message' => 'Bestellung wurde nicht gefunden'
-            ];
-        }
-
-        return [
-            'success' => true,
-            'order' => $details['order'],
-            'items' => $details['items']
-        ];
-    }
-
-    // --------------------------------------------------
-    // Bestellhistorie laden
-    public function getOrderHistory(?int $requestedUserId = null): array
-    {
-        if (!isset($_SESSION['user_id'])) {
-            return [
-                'success' => false,
-                'message' => 'Bitte anmelden',
-                'orders' => []
-            ];
-        }
-
-        $userId = (int)$_SESSION['user_id'];
-
-        // Wenn keine fremde user_id übergeben wurde, eigene Historie laden
-        if ($requestedUserId === null || $requestedUserId <= 0) {
-            $targetUserId = $userId;
-        } else {
-            // Fremde Historie darf nur Admin sehen
-            if ((int)($_SESSION['is_admin'] ?? 0) !== 1) {
-                return [
-                    'success' => false,
-                    'message' => 'Keine Berechtigung',
-                    'orders' => []
-                ];
-            }
-
-            $targetUserId = $requestedUserId;
-        }
-
-        $repository = new OrderRepository();
-
-        return [
-            'success' => true,
-            'orders' => $repository->getOrdersByUserId($targetUserId)
-        ];
     }
     // --------------------------------------------------
 }

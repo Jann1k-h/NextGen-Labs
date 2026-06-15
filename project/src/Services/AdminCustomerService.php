@@ -4,11 +4,18 @@ class AdminCustomerService
 {
     private AdminCustomerRepository $customerRepository;
 
+    // --------------------------------------------------
+    // Repository vorbereiten
     public function __construct()
     {
+        // Repository erstellen, damit der Service auf Kundendaten zugreifen kann
         $this->customerRepository = new AdminCustomerRepository();
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Alle Kunden laden
     public function getCustomers(): array
     {
         return [
@@ -16,9 +23,14 @@ class AdminCustomerService
             'customers' => $this->customerRepository->findAllCustomers()
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Kundendaten aktualisieren
     public function updateCustomer(?array $data, int $currentUserId): array
     {
+        // Prüfen, ob eine Kunden-ID übergeben wurde
         if (!$data || empty($data['id'])) {
             return [
                 'success' => false,
@@ -28,6 +40,7 @@ class AdminCustomerService
 
         $customerId = (int)$data['id'];
 
+        // Admin darf sein eigenes Konto hier nicht bearbeiten
         if ($customerId === $currentUserId) {
             return [
                 'success' => false,
@@ -35,6 +48,7 @@ class AdminCustomerService
             ];
         }
 
+        // Prüfen, ob der Kunde existiert
         $customer = $this->customerRepository->findCustomerById($customerId);
 
         if (!$customer) {
@@ -44,12 +58,14 @@ class AdminCustomerService
             ];
         }
 
+        // Kundendaten validieren
         $validation = $this->validateCustomerData($data, $customerId);
 
         if (!$validation['success']) {
             return $validation;
         }
 
+        // Neues Passwort vorbereiten, falls eines eingegeben wurde
         $newPassword = trim($data['password'] ?? '');
         $hashedPassword = null;
 
@@ -57,6 +73,7 @@ class AdminCustomerService
             $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         }
 
+        // Bereinigte Daten an das Repository übergeben und Kunde aktualisieren
         $this->customerRepository->updateCustomer($customerId, [
             'title' => trim($data['title']),
             'firstname' => trim($data['firstname']),
@@ -77,9 +94,14 @@ class AdminCustomerService
             'message' => 'Kunde wurde aktualisiert.'
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Kunden deaktivieren
     public function deactivateCustomer(?array $data, int $currentUserId): array
     {
+        // Prüfen, ob eine Kunden-ID übergeben wurde
         if (!$data || empty($data['id'])) {
             return [
                 'success' => false,
@@ -89,6 +111,7 @@ class AdminCustomerService
 
         $customerId = (int)$data['id'];
 
+        // Admin darf sein eigenes Konto nicht deaktivieren
         if ($customerId === $currentUserId) {
             return [
                 'success' => false,
@@ -96,6 +119,7 @@ class AdminCustomerService
             ];
         }
 
+        // Prüfen, ob der Kunde existiert
         $customer = $this->customerRepository->findCustomerById($customerId);
 
         if (!$customer) {
@@ -105,6 +129,7 @@ class AdminCustomerService
             ];
         }
 
+        // Kunden in der Datenbank deaktivieren
         $this->customerRepository->deactivateCustomer($customerId);
 
         return [
@@ -112,9 +137,14 @@ class AdminCustomerService
             'message' => 'Kunde wurde deaktiviert.'
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Bestellungen eines Kunden laden
     public function getOrders(int $customerId): array
     {
+        // Prüfen, ob eine gültige Kunden-ID übergeben wurde
         if ($customerId <= 0) {
             return [
                 'success' => false,
@@ -122,6 +152,7 @@ class AdminCustomerService
             ];
         }
 
+        // Prüfen, ob der Kunde existiert
         $customer = $this->customerRepository->findCustomerById($customerId);
 
         if (!$customer) {
@@ -131,14 +162,20 @@ class AdminCustomerService
             ];
         }
 
+        // Bestellungen des Kunden zurückgeben
         return [
             'success' => true,
             'orders' => $this->customerRepository->findOrdersByCustomerId($customerId)
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Kundendaten validieren
     private function validateCustomerData(array $data, int $customerId): array
     {
+        // Prüfen, ob alle Pflichtfelder ausgefüllt wurden
         if (
             empty($data['title']) ||
             empty($data['firstname']) ||
@@ -155,6 +192,7 @@ class AdminCustomerService
             ];
         }
 
+        // Prüfen, ob die Anrede erlaubt ist
         if (!in_array($data['title'], ['Herr', 'Frau'])) {
             return [
                 'success' => false,
@@ -162,6 +200,7 @@ class AdminCustomerService
             ];
         }
 
+        // E-Mail-Adresse validieren
         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             return [
                 'success' => false,
@@ -169,6 +208,7 @@ class AdminCustomerService
             ];
         }
 
+        // Prüfen, ob der Benutzername bereits von einem anderen User verwendet wird
         if ($this->customerRepository->existsUsernameExceptId($data['username'], $customerId)) {
             return [
                 'success' => false,
@@ -176,6 +216,7 @@ class AdminCustomerService
             ];
         }
 
+        // Prüfen, ob die E-Mail bereits von einem anderen User verwendet wird
         if ($this->customerRepository->existsEmailExceptId($data['email'], $customerId)) {
             return [
                 'success' => false,
@@ -183,6 +224,7 @@ class AdminCustomerService
             ];
         }
 
+        // Neues Passwort prüfen, falls eines eingegeben wurde
         $newPassword = trim($data['password'] ?? '');
 
         if ($newPassword !== '' && strlen($newPassword) < 6) {
@@ -196,4 +238,5 @@ class AdminCustomerService
             'success' => true
         ];
     }
+    // --------------------------------------------------
 }

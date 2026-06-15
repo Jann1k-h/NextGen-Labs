@@ -2,25 +2,26 @@
 
 class CartService
 {
+    // --------------------------------------------------
+    // Kurs zum Warenkorb hinzufügen
     public function addToCart(int $courseId): array
     {
+        // Repository erstellen, damit der Service auf Warenkorb-Daten zugreifen kann
         $cartRepository = new CartRepository();
 
-        // **************************************************
-        // Überprüfen, ob der Kurs noch verfügbar ist
+        // Prüfen, ob der Kurs noch verfügbar ist
         if ($cartRepository->isCourseAvailable($courseId) == false) {
             return [
                 'success' => false,
                 'message' => 'Der Kurs ist nicht mehr verfügbar'
             ];
         }
-        // **************************************************
 
-        // **************************************************
-        // Überprüfen, ob der Kurs bereits im User-Warenkorb ist (wenn es einen User gibt)
+        // Wenn ein User eingeloggt ist, Kurs in den User-Warenkorb legen
         if (isset($_SESSION['user_id'])) {
             $userId = (int)$_SESSION['user_id'];
 
+            // Prüfen, ob der Kurs bereits im User-Warenkorb ist
             if ($cartRepository->existsForUser($userId, $courseId)) {
                 return [
                     'success' => false,
@@ -30,15 +31,14 @@ class CartService
 
             $cartRepository->addForUser($userId, $courseId);
         }
-        // **************************************************
-        
-        // **************************************************
-        // Überprüfen, ob der Kurs bereits im Gast-Warenkorb ist (wenn es keinen User gibt)
+
+        // Wenn kein User eingeloggt ist, Kurs in den Gast-Warenkorb legen
         if (!isset($_SESSION['user_id'])) {
 
-            // $this ruft Funktion aus der aktuellen Klasse auf
+            // Gast-Token holen oder neu erstellen
             $guestToken = $this->getOrCreateGuestToken();
 
+            // Prüfen, ob der Kurs bereits im Gast-Warenkorb ist
             if ($cartRepository->existsForGuest($guestToken, $courseId)) {
                 return [
                     'success' => false,
@@ -48,21 +48,27 @@ class CartService
 
             $cartRepository->addForGuest($guestToken, $courseId);
         }
-        // **************************************************
 
         return [
             'success' => true,
             'message' => 'Kurs zum Warenkorb hinzugefügt'
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Warenkorb laden
     public function getCart(): array
     {
+        // Repository erstellen, damit der Service auf Warenkorb-Daten zugreifen kann
         $cartRepository = new CartRepository();
 
+        // Warenkorb je nach Login-Status laden
         if (isset($_SESSION['user_id'])) {
             $items = $cartRepository->getByUser((int)$_SESSION['user_id']);
         } else {
+            // Wenn kein Gast-Token existiert, ist der Gast-Warenkorb leer
             if (!isset($_COOKIE['guest_cart_token']) || $_COOKIE['guest_cart_token'] === '') {
                 $items = [];
             } else {
@@ -70,6 +76,7 @@ class CartService
             }
         }
 
+        // Gesamtpreis berechnen
         $total = 0;
 
         foreach ($items as $item) {
@@ -83,14 +90,21 @@ class CartService
             'count' => count($items)
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Kurs aus Warenkorb entfernen
     public function removeFromCart(int $cartItemId): array
     {
+        // Repository erstellen, damit der Service auf Warenkorb-Daten zugreifen kann
         $cartRepository = new CartRepository();
 
+        // Entfernen je nach Login-Status
         if (isset($_SESSION['user_id'])) {
             $cartRepository->removeForUser((int)$_SESSION['user_id'], $cartItemId);
         } else {
+            // Ohne Gast-Token gibt es keinen Gast-Warenkorb
             if (!isset($_COOKIE['guest_cart_token']) || $_COOKIE['guest_cart_token'] === '') {
                 return [
                     'success' => false,
@@ -106,18 +120,25 @@ class CartService
             'message' => 'Kurs aus dem Warenkorb entfernt'
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Gast-Warenkorb nach Login in User-Warenkorb übernehmen
     public function mergeGuestCartIntoUserCart(int $userId): void
     {
+        // Wenn kein Gast-Token existiert, gibt es nichts zu übernehmen
         if (!isset($_COOKIE['guest_cart_token']) || $_COOKIE['guest_cart_token'] === '') {
             return;
         }
 
         $guestToken = $_COOKIE['guest_cart_token'];
 
+        // Gast-Warenkorb laden
         $cartRepository = new CartRepository();
         $guestItems = $cartRepository->getGuestItems($guestToken);
 
+        // Jeden Gast-Warenkorb-Eintrag prüfen und in den User-Warenkorb übernehmen
         foreach ($guestItems as $item) {
             $courseId = (int)$item['course_id'];
 
@@ -129,23 +150,29 @@ class CartService
             }
         }
 
+        // Gast-Warenkorb nach dem Übernehmen löschen
         $cartRepository->deleteGuestCart($guestToken);
 
+        // Gast-Token-Cookie löschen
         setcookie('guest_cart_token', '', time() - 3600, '/');
         unset($_COOKIE['guest_cart_token']);
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Gast-Token holen oder erstellen
     private function getOrCreateGuestToken(): string
     {
-        // Überprüfen, ob bereits ein Gast-Token existiert
+        // Bestehenden Gast-Token verwenden, falls vorhanden
         if (isset($_COOKIE['guest_cart_token']) && $_COOKIE['guest_cart_token'] !== '') {
             return $_COOKIE['guest_cart_token'];
         }
 
-        // **************************************************
-        // Neues Gast-Token generieren und setzen
+        // Neuen zufälligen Gast-Token erstellen
         $token = bin2hex(random_bytes(32));
 
+        // Gast-Token als Cookie speichern
         setcookie(
             'guest_cart_token',
             $token,
@@ -156,9 +183,10 @@ class CartService
             true
         );
 
+        // Token auch direkt in $_COOKIE setzen, damit er im aktuellen Request verfügbar ist
         $_COOKIE['guest_cart_token'] = $token;
-        // **************************************************
 
         return $token;
     }
+    // --------------------------------------------------
 }

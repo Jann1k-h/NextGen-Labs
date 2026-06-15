@@ -3,6 +3,12 @@
 // --------------------------------------------------
 
 $(document).ready(() => {
+
+  // Nur wenn admin-course-Element vorhanden ist Daten laden, damit kein Alert kommt
+  if ($('#admin-course-list').length === 0) {
+    return;
+  }
+
   loadAdminCourseCategories();
   loadAdminCourses();
 });

@@ -2,6 +2,9 @@
 // Theme Toggle (Dark / Light Mode)
 // --------------------------------------------------
 
+// Theme wird global über data-bs-theme gesetzt.
+// Bootstrap-Klassen wie bg-body, text-body und text-body-secondary
+// passen sich dadurch automatisch an Light/Dark Mode an.
 
 // --------------------------------------------------
 // Theme wechseln per Toggle

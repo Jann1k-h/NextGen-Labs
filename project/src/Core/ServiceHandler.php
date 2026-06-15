@@ -35,7 +35,7 @@ class ServiceHandler
                 break;
 
             case 'voucher':
-                $controller = new VoucherController();
+                $controller = new AdminVoucherController();
                 break;
 
             case 'adminCourses':

@@ -5,6 +5,12 @@
 // --------------------------------------------------
 // Beim Laden der Seite Kunden laden
 $(document).ready(() => {
+
+  // Nur wenn admin-customer-Element vorhanden ist Daten laden, damit kein Alert kommt
+  if ($('#admin-customer-list').length === 0) {
+    return;
+  }
+
   loadAdminCustomers();
 });
 // --------------------------------------------------

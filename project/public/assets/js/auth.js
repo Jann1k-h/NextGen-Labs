@@ -258,35 +258,16 @@ $(document).on('click', '#register-submit-button-modal', function() {
 // Logout-Handler
 $(document).on('click', '#logout-button-nav', function() {
     console.log('Logout Button geklickt');
+
     logoutRequest()
     .then(data => {
         if (data.success == true) {
 
             showAuthAlert(data.message, 'success');
 
-            // User-Area wird neu geladen; danach Warenkorb neu laden, damit der Gast-Warenkorb/Zähler korrekt ist.
-            reloadUserArea();
-            loadCartItems();
-
-            console.log(data.message);
-
-            const categoryId = $('#category-select').val();
-
-            // Prüfen, ob Elemente von Kursliste vorhanden sind mit length. Wenn length > 0, dann existieren Elemente, ansonsten nicht.
-            // Das ist notwendig, damit die Funktion loadCourses() nicht auf Seiten ohne Kursliste (z.B. Details-Seite) aufgerufen wird, 
-            // da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
-            if ($('#course-list').length) {
-                loadCourses(categoryId);
-            }
-
-            const courseId = $('#course-details').data('course-id');
-
-            // Prüfen, ob Elemente von Kursdetails vorhanden sind mit length. Wenn length > 0, dann existieren Elemente, ansonsten nicht.
-            // Das ist notwendig, damit die Funktion loadCourseDetails() nicht auf Seiten ohne Kursdetails (z.B. Startseite) aufgerufen wird, 
-            // da sie dort zu Fehlern führen würde, weil die notwendigen Elemente fehlen.
-            if (courseId) {
-                loadCourseDetails(courseId);
-            }
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 500);
 
         } else if (data.success == false) {
 

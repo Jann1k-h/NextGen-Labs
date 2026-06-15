@@ -1,19 +1,25 @@
 <?php
 
-// zentrale Klasse, um die Authentifizierungslogik zu kapseln
-
+// Zentrale Klasse, um die Authentifizierungslogik zu kapseln
 class AuthService
 {
-    private AuthRepository $userRepository;
+    private AuthRepository $authRepository;
 
-    // Funktion wird automatisch aufgerufen, sobald ein Objekt der Klasse erstellt wird, wie zb in Zeile 68
+    // --------------------------------------------------
+    // Repository vorbereiten
     public function __construct()
     {
-        $this->userRepository = new AuthRepository();
+        // Repository erstellen, damit der Service auf Userdaten zugreifen kann
+        $this->authRepository = new AuthRepository();
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // User einloggen
     public function login(string $identifier, string $password, bool $rememberMe): array
     {
+        // Prüfen, ob E-Mail oder Username eingegeben wurde
         if ($identifier === '') {
             return [
                 'success' => false,
@@ -21,6 +27,7 @@ class AuthService
             ];
         }
 
+        // Prüfen, ob Passwort eingegeben wurde
         if ($password === '') {
             return [
                 'success' => false,
@@ -29,8 +36,10 @@ class AuthService
         }
 
         try {
-            $user = $this->userRepository->findByIdentifier($identifier);
+            // User anhand von E-Mail oder Username suchen
+            $user = $this->authRepository->findByIdentifier($identifier);
 
+            // Prüfen, ob der User existiert
             if (!$user) {
                 return [
                     'success' => false,
@@ -38,6 +47,7 @@ class AuthService
                 ];
             }
 
+            // Prüfen, ob der Account aktiv ist
             if ((int)$user['is_active'] !== 1) {
                 return [
                     'success' => false,
@@ -45,7 +55,7 @@ class AuthService
                 ];
             }
 
-            // password_verify() vergleicht das eingegebene Passwort mit dem in der DB gespeicherten Hasht Passwort
+            // Passwort mit dem gespeicherten Passwort-Hash vergleichen
             if (!password_verify($password, $user['password'])) {
                 return [
                     'success' => false,
@@ -54,26 +64,31 @@ class AuthService
             }
 
             if ($rememberMe) {
-                // Generiere einen zufälligen Token
+                // Zufälligen Remember-Token erstellen
                 $token = bin2hex(random_bytes(16));
-                $expires = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); // 30 Tage
 
-                // Speichere den Token in der DB
-                $this->userRepository->updateRememberToken((int)$user['id'], $token, $expires);
+                // Ablaufdatum für den Token setzen
+                $expires = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60));
 
-                // Setze den Token als Cookie
+                // Remember-Token in der Datenbank speichern
+                $this->authRepository->updateRememberToken((int)$user['id'], $token, $expires);
+
+                // Remember-Token als Cookie speichern
                 setcookie('remember_token', $token, time() + (30 * 24 * 60 * 60), "/");
             } else {
-                // Wenn "Remember Me" nicht ausgewählt ist, lösche den Token aus der DB und dem Cookie
-                $this->userRepository->updateRememberToken((int)$user['id'], null, null);
+                // Alten Remember-Token aus der Datenbank löschen
+                $this->authRepository->updateRememberToken((int)$user['id'], null, null);
 
+                // Alten Remember-Token-Cookie löschen
                 setcookie('remember_token', '', time() - 3600, "/");
             }
 
+            // Userdaten in die Session schreiben
             $_SESSION['user_id'] = (int)$user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['is_admin'] = (int)$user['is_admin'];
 
+            // Gast-Warenkorb mit User-Warenkorb zusammenführen
             $cartService = new CartService();
             $cartService->mergeGuestCartIntoUserCart((int)$user['id']);
 
@@ -91,80 +106,67 @@ class AuthService
             ];
         }
     }
+    // --------------------------------------------------
 
-    public function register(string $title, string $firstname, string $lastname, string $username, string $address, string $zipcode, string $city, string $email, string $password, string $confirmPassword, string $paymentInfo): array
-    {
-        if($title === '') {
-            return [
-                'success' => false,
-                'message' => 'Bitte Anrede auswählen'
-            ];
+
+    // --------------------------------------------------
+    // User registrieren
+    public function register(
+        string $title,
+        string $firstname,
+        string $lastname,
+        string $username,
+        string $address,
+        string $zipcode,
+        string $city,
+        string $email,
+        string $password,
+        string $confirmPassword,
+        string $paymentInfo
+    ): array {
+        // Prüfen, ob alle Pflichtfelder ausgefüllt wurden
+        if ($title === '') {
+            return ['success' => false, 'message' => 'Bitte Anrede auswählen'];
         }
 
-        if($firstname === '') {
-            return [
-                'success' => false,
-                'message' => 'Bitte Vorname eingeben'
-            ];
+        if ($firstname === '') {
+            return ['success' => false, 'message' => 'Bitte Vorname eingeben'];
         }
 
-        if($lastname === '') {
-            return [
-                'success' => false,
-                'message' => 'Bitte Nachname eingeben'
-            ];
+        if ($lastname === '') {
+            return ['success' => false, 'message' => 'Bitte Nachname eingeben'];
         }
 
-        if($username === '') {
-            return [
-                'success' => false,
-                'message' => 'Bitte Username eingeben'
-            ];
+        if ($username === '') {
+            return ['success' => false, 'message' => 'Bitte Username eingeben'];
         }
 
-        if($address === '') {
-            return [
-                'success' => false,
-                'message' => 'Bitte Adresse eingeben'
-            ];
+        if ($address === '') {
+            return ['success' => false, 'message' => 'Bitte Adresse eingeben'];
         }
 
-        if($zipcode === '') {
-            return [
-                'success' => false,
-                'message' => 'Bitte Postleitzahl eingeben'
-            ];
+        if ($zipcode === '') {
+            return ['success' => false, 'message' => 'Bitte Postleitzahl eingeben'];
         }
 
-        if($city === '') {
-            return [
-                'success' => false,
-                'message' => 'Bitte Stadt eingeben'
-            ];
+        if ($city === '') {
+            return ['success' => false, 'message' => 'Bitte Stadt eingeben'];
         }
 
-        if($email === '') {
-            return [
-                'success' => false,
-                'message' => 'Bitte E-Mail eingeben'
-            ];
+        if ($email === '') {
+            return ['success' => false, 'message' => 'Bitte E-Mail eingeben'];
         }
 
-        if($password === '') {
-            return [
-                'success' => false,
-                'message' => 'Bitte Passwort eingeben'
-            ];
+        if ($password === '') {
+            return ['success' => false, 'message' => 'Bitte Passwort eingeben'];
         }
 
-        if($confirmPassword === '') {
-            return [
-                'success' => false,
-                'message' => 'Bitte Passwort bestätigen'
-            ];
+        if ($confirmPassword === '') {
+            return ['success' => false, 'message' => 'Bitte Passwort bestätigen'];
         }
 
-        if($password !== $confirmPassword) {
+        // Prüfen, ob beide Passwörter gleich sind
+        if ($password !== $confirmPassword) {
             return [
                 'success' => false,
                 'message' => 'Passwörter stimmen nicht überein'
@@ -172,8 +174,9 @@ class AuthService
         }
 
         try {
-            $existingUserEmail = $this->userRepository->findByIdentifier($email);
-            $existingUserUsername = $this->userRepository->findByIdentifier($username);
+            // Prüfen, ob E-Mail oder Username bereits existieren
+            $existingUserEmail = $this->authRepository->findByIdentifier($email);
+            $existingUserUsername = $this->authRepository->findByIdentifier($username);
 
             if ($existingUserEmail && $existingUserUsername) {
                 return [
@@ -196,9 +199,22 @@ class AuthService
                 ];
             }
 
+            // Passwort sicher hashen
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            $this->userRepository->createUser($title, $firstname, $lastname, $username, $address, $zipcode, $city, $email, $hashedPassword, $paymentInfo);
+            // User in der Datenbank erstellen
+            $this->authRepository->createUser(
+                $title,
+                $firstname,
+                $lastname,
+                $username,
+                $address,
+                $zipcode,
+                $city,
+                $email,
+                $hashedPassword,
+                $paymentInfo
+            );
 
             return [
                 'success' => true,
@@ -210,23 +226,26 @@ class AuthService
                 'message' => 'DB-Fehler'
             ];
         }
-
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // User ausloggen
     public function logout(): array
     {
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id'];
 
-            // Lösche den Remember-Token aus der DB
-            $this->userRepository->updateRememberToken($userId, null, null);
+            // Remember-Token aus der Datenbank löschen
+            $this->authRepository->updateRememberToken($userId, null, null);
         }
 
-        // Lösche alle Session-Daten
+        // Alle Session-Daten löschen
         session_unset();
         session_destroy();
 
-        // Lösche den Remember-Token-Cookie
+        // Remember-Token-Cookie löschen
         setcookie('remember_token', '', time() - 3600, "/");
 
         return [
@@ -234,4 +253,5 @@ class AuthService
             'message' => 'Erfolgreich ausgeloggt'
         ];
     }
+    // --------------------------------------------------
 }

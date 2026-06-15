@@ -19,6 +19,7 @@ if (!isset($_SESSION['user_id']) || (int)($_SESSION['is_admin'] ?? 0) !== 1) {
 // Views
 include_once VIEWS_PATH . '/layouts/header.php';
 include_once VIEWS_PATH . '/layouts/nav.php';
+
 // CONTENT
 include_once VIEWS_PATH . '/admin/admin_courses_page.php';
 

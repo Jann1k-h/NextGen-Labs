@@ -4,15 +4,24 @@ class AccountService
 {
     private AccountRepository $accountRepository;
 
+    // --------------------------------------------------
+    // Repository vorbereiten
     public function __construct()
     {
+        // Repository erstellen, damit der Service auf Account-Daten zugreifen kann
         $this->accountRepository = new AccountRepository();
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Kontodaten laden
     public function getAccount(int $userId): array
     {
+        // User anhand der ID aus der Datenbank laden
         $user = $this->accountRepository->findUserById($userId);
 
+        // Prüfen, ob der User gefunden wurde
         if (!$user) {
             return [
                 'success' => false,
@@ -20,14 +29,20 @@ class AccountService
             ];
         }
 
+        // Userdaten zurückgeben
         return [
             'success' => true,
             'user' => $user
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Kontodaten aktualisieren
     public function updateAccount(int $userId, ?array $data): array
     {
+        // Prüfen, ob gültige Daten empfangen wurden
         if (!$data) {
             return [
                 'success' => false,
@@ -35,8 +50,10 @@ class AccountService
             ];
         }
 
+        // User inklusive Passwort laden, damit das aktuelle Passwort geprüft werden kann
         $user = $this->accountRepository->findUserWithPasswordById($userId);
 
+        // Prüfen, ob der User gefunden wurde
         if (!$user) {
             return [
                 'success' => false,
@@ -44,6 +61,7 @@ class AccountService
             ];
         }
 
+        // Prüfen, ob alle Pflichtfelder ausgefüllt wurden
         if (!$this->hasRequiredFields($data)) {
             return [
                 'success' => false,
@@ -51,6 +69,7 @@ class AccountService
             ];
         }
 
+        // Prüfen, ob die Anrede erlaubt ist
         if (!in_array($data['title'], ['Herr', 'Frau'])) {
             return [
                 'success' => false,
@@ -58,6 +77,7 @@ class AccountService
             ];
         }
 
+        // E-Mail-Adresse validieren
         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             return [
                 'success' => false,
@@ -65,6 +85,7 @@ class AccountService
             ];
         }
 
+        // Aktuelles Passwort prüfen, bevor die Kontodaten geändert werden
         if (!password_verify($data['current_password'], $user['password'])) {
             return [
                 'success' => false,
@@ -72,6 +93,7 @@ class AccountService
             ];
         }
 
+        // Prüfen, ob der Benutzername bereits von einem anderen User verwendet wird
         if ($this->accountRepository->existsUsernameExceptId($data['username'], $userId)) {
             return [
                 'success' => false,
@@ -79,6 +101,7 @@ class AccountService
             ];
         }
 
+        // Prüfen, ob die E-Mail bereits von einem anderen User verwendet wird
         if ($this->accountRepository->existsEmailExceptId($data['email'], $userId)) {
             return [
                 'success' => false,
@@ -86,6 +109,7 @@ class AccountService
             ];
         }
 
+        // Bereinigte Daten an das Repository übergeben und User aktualisieren
         $this->accountRepository->updateUser($userId, [
             'title' => trim($data['title']),
             'firstname' => trim($data['firstname']),
@@ -98,14 +122,20 @@ class AccountService
             'payment_info' => trim($data['payment_info'] ?? '')
         ]);
 
+        // Erfolgreiche Aktualisierung zurückgeben
         return [
             'success' => true,
             'message' => 'Kontodaten wurden aktualisiert.'
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Pflichtfelder prüfen
     private function hasRequiredFields(array $data): bool
     {
+        // Nur true zurückgeben, wenn alle Pflichtfelder vorhanden und nicht leer sind
         return !empty($data['title'])
             && !empty($data['firstname'])
             && !empty($data['lastname'])
@@ -116,4 +146,5 @@ class AccountService
             && !empty($data['city'])
             && !empty($data['current_password']);
     }
+    // --------------------------------------------------
 }

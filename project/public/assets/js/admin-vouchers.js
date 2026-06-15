@@ -5,6 +5,12 @@
 // --------------------------------------------------
 // Beim Laden der Seite Gutscheine laden
 $(document).ready(() => {
+
+  // Nur wenn admin-voucher-Element vorhanden ist Daten laden, damit kein Alert kommt
+  if ($('#voucher-list').length === 0) {
+    return;
+  }
+
   loadVouchers();
 });
 // --------------------------------------------------

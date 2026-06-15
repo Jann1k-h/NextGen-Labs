@@ -34,6 +34,7 @@ require_once SERVICES_PATH . '/AuthService.php';
 require_once SERVICES_PATH . '/CartService.php';
 require_once SERVICES_PATH . '/CheckoutService.php';
 require_once SERVICES_PATH . '/CourseService.php';
+require_once SERVICES_PATH . '/OrderService.php';
 
 // Controllers
 require_once CONTROLLERS_PATH . '/BaseController.php';

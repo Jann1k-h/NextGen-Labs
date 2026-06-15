@@ -2,12 +2,24 @@
 
 class AdminVoucherService
 {
+    private AdminVoucherRepository $adminVoucherRepository;
+
+    // --------------------------------------------------
+    // Repository vorbereiten
+    public function __construct()
+    {
+        // Repository erstellen, damit der Service auf Gutscheindaten zugreifen kann
+        $this->adminVoucherRepository = new AdminVoucherRepository();
+    }
+    // --------------------------------------------------
+
+
     // --------------------------------------------------
     // Alle Gutscheine laden
     public function getAllVouchers(): array
     {
-        $adminVoucherRepository = new AdminVoucherRepository();
-        return $adminVoucherRepository->findAll();
+        // Alle Gutscheine aus der Datenbank laden
+        return $this->adminVoucherRepository->findAll();
     }
     // --------------------------------------------------
 
@@ -16,9 +28,10 @@ class AdminVoucherService
     // Gutschein für Checkout prüfen
     public function checkVoucherForCheckout(string $code): array
     {
-        $adminVoucherRepository = new AdminVoucherRepository();
-        $voucher = $adminVoucherRepository->findByCode($code);
+        // Gutschein anhand des Codes suchen
+        $voucher = $this->adminVoucherRepository->findByCode($code);
 
+        // Prüfen, ob der Gutschein existiert
         if (!$voucher) {
             return [
                 'success' => false,
@@ -26,6 +39,7 @@ class AdminVoucherService
             ];
         }
 
+        // Prüfen, ob der Gutschein aktiv ist
         if ((int)$voucher['is_active'] !== 1) {
             return [
                 'success' => false,
@@ -33,6 +47,7 @@ class AdminVoucherService
             ];
         }
 
+        // Prüfen, ob der Gutschein abgelaufen ist
         if (!empty($voucher['valid_until']) && strtotime($voucher['valid_until']) < time()) {
             return [
                 'success' => false,
@@ -40,6 +55,7 @@ class AdminVoucherService
             ];
         }
 
+        // Prüfen, ob das Nutzungslimit erreicht wurde
         if (
             $voucher['usage_limit'] !== null &&
             $voucher['usage_limit'] !== '' &&
@@ -51,6 +67,7 @@ class AdminVoucherService
             ];
         }
 
+        // Checkout-Daten laden, damit der Rabatt berechnet werden kann
         $checkoutService = new CheckoutService();
         $checkoutData = $checkoutService->getCheckoutData();
 
@@ -58,18 +75,22 @@ class AdminVoucherService
             return $checkoutData;
         }
 
+        // Zwischensumme aus dem Warenkorb holen
         $subtotal = (float)$checkoutData['total'];
 
+        // Rabatt berechnen, je nachdem ob Prozent- oder Fixbetrag
         if ($voucher['discount_type'] === 'percent') {
             $discountAmount = $subtotal * ((float)$voucher['discount_value'] / 100);
         } else {
             $discountAmount = (float)$voucher['discount_value'];
         }
 
+        // Rabatt darf nicht höher als die Zwischensumme sein
         if ($discountAmount > $subtotal) {
             $discountAmount = $subtotal;
         }
 
+        // Endbetrag berechnen
         $finalTotal = $subtotal - $discountAmount;
 
         return [
@@ -91,21 +112,22 @@ class AdminVoucherService
     // Gutschein erstellen
     public function createVoucher(array $data): array
     {
+        // Gutscheindaten prüfen
         $validation = $this->validateVoucherData($data);
 
         if (!$validation['success']) {
             return $validation;
         }
 
-        $adminVoucherRepository = new AdminVoucherRepository();
-
-        if ($adminVoucherRepository->existsByCode($data['code'])) {
+        // Prüfen, ob der Gutscheincode bereits existiert
+        if ($this->adminVoucherRepository->existsByCode($data['code'])) {
             return [
                 'success' => false,
                 'message' => 'Dieser Gutscheincode existiert bereits.'
             ];
         }
 
+        // Gutscheindaten für die Datenbank vorbereiten
         $voucherData = [
             'code' => strtoupper(trim($data['code'])),
             'name' => trim($data['name']),
@@ -116,7 +138,8 @@ class AdminVoucherService
             'is_active' => isset($data['is_active']) ? (int)$data['is_active'] : 1
         ];
 
-        $adminVoucherRepository->create($voucherData);
+        // Gutschein in der Datenbank erstellen
+        $this->adminVoucherRepository->create($voucherData);
 
         return [
             'success' => true,
@@ -130,8 +153,8 @@ class AdminVoucherService
     // Gutschein bearbeiten
     public function updateVoucher(int $id, array $data): array
     {
-        $adminVoucherRepository = new AdminVoucherRepository();
-        $existingVoucher = $adminVoucherRepository->findById($id);
+        // Prüfen, ob der Gutschein existiert
+        $existingVoucher = $this->adminVoucherRepository->findById($id);
 
         if (!$existingVoucher) {
             return [
@@ -140,19 +163,22 @@ class AdminVoucherService
             ];
         }
 
+        // Gutscheindaten prüfen
         $validation = $this->validateVoucherData($data);
 
         if (!$validation['success']) {
             return $validation;
         }
 
-        if ($adminVoucherRepository->existsByCodeExceptId($data['code'], $id)) {
+        // Prüfen, ob der Gutscheincode schon bei einem anderen Gutschein verwendet wird
+        if ($this->adminVoucherRepository->existsByCodeExceptId($data['code'], $id)) {
             return [
                 'success' => false,
                 'message' => 'Dieser Gutscheincode wird bereits verwendet.'
             ];
         }
 
+        // Gutscheindaten für die Datenbank vorbereiten
         $voucherData = [
             'code' => strtoupper(trim($data['code'])),
             'name' => trim($data['name']),
@@ -163,7 +189,8 @@ class AdminVoucherService
             'is_active' => isset($data['is_active']) ? (int)$data['is_active'] : 1
         ];
 
-        $adminVoucherRepository->update($id, $voucherData);
+        // Gutschein in der Datenbank aktualisieren
+        $this->adminVoucherRepository->update($id, $voucherData);
 
         return [
             'success' => true,
@@ -177,8 +204,8 @@ class AdminVoucherService
     // Gutschein löschen
     public function deleteVoucher(int $id): array
     {
-        $adminVoucherRepository = new AdminVoucherRepository();
-        $existingVoucher = $adminVoucherRepository->findById($id);
+        // Prüfen, ob der Gutschein existiert
+        $existingVoucher = $this->adminVoucherRepository->findById($id);
 
         if (!$existingVoucher) {
             return [
@@ -187,7 +214,8 @@ class AdminVoucherService
             ];
         }
 
-        $adminVoucherRepository->delete($id);
+        // Gutschein aus der Datenbank löschen
+        $this->adminVoucherRepository->delete($id);
 
         return [
             'success' => true,
@@ -201,6 +229,7 @@ class AdminVoucherService
     // Gutschein-Daten prüfen
     private function validateVoucherData(array $data): array
     {
+        // Gutscheincode darf nicht leer sein
         if (empty($data['code'])) {
             return [
                 'success' => false,
@@ -208,6 +237,7 @@ class AdminVoucherService
             ];
         }
 
+        // Name darf nicht leer sein
         if (empty($data['name'])) {
             return [
                 'success' => false,
@@ -215,6 +245,7 @@ class AdminVoucherService
             ];
         }
 
+        // Rabatt-Typ muss percent oder fixed sein
         if (empty($data['discount_type']) || !in_array($data['discount_type'], ['percent', 'fixed'])) {
             return [
                 'success' => false,
@@ -222,6 +253,7 @@ class AdminVoucherService
             ];
         }
 
+        // Rabatt-Wert muss größer als 0 sein
         if (!isset($data['discount_value']) || (float)$data['discount_value'] <= 0) {
             return [
                 'success' => false,
@@ -229,6 +261,7 @@ class AdminVoucherService
             ];
         }
 
+        // Prozent-Rabatt darf maximal 100 sein
         if ($data['discount_type'] === 'percent' && (float)$data['discount_value'] > 100) {
             return [
                 'success' => false,
@@ -236,6 +269,7 @@ class AdminVoucherService
             ];
         }
 
+        // Nutzungslimit darf nicht negativ sein
         if (isset($data['usage_limit']) && $data['usage_limit'] !== '' && (int)$data['usage_limit'] < 0) {
             return [
                 'success' => false,
