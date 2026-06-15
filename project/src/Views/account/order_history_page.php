@@ -1,8 +1,11 @@
-<div class="container py-4">
+<div class="container py-5">
 
-    <h2 class="mb-4">
-        Bestellhistorie
-    </h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-1">Bestellhistorie</h1>
+            <p class="text-body-secondary mb-0">Hier findest du deine bisherigen Bestellungen und Details.</p>
+        </div>
+    </div>
 
     <?php if (!empty($result['success']) && $result['success'] === false): ?>
 
@@ -18,79 +21,88 @@
 
     <?php else: ?>
 
-        <div class="table-responsive">
+        <!-- Bestellhistorie Card -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">Meine Bestellungen</h5>
+            </div>
 
-            <table class="table align-middle">
+            <div class="card-body p-0">
+                <div class="table-responsive">
 
-                <thead>
-                    <tr>
-                        <th>Bestellung</th>
-                        <th>Datum</th>
-                        <th>Status</th>
-                        <th>Gesamt</th>
-                        <th></th>
-                    </tr>
-                </thead>
+                    <table class="table table-hover align-middle mb-0">
 
-                <tbody>
+                        <thead>
+                            <tr>
+                                <th>Bestellung</th>
+                                <th>Datum</th>
+                                <th>Status</th>
+                                <th>Gesamt</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
 
-                    <?php foreach ($result['orders'] as $order): ?>
+                        <tbody>
 
-                        <tr>
+                            <?php foreach ($result['orders'] as $order): ?>
 
-                            <td>
-                                #<?= htmlspecialchars($order['id']) ?>
-                            </td>
+                                <tr>
 
-                            <td>
-                                <?= date(
-                                    'd.m.Y H:i',
-                                    strtotime($order['created_at'])
-                                ) ?>
-                            </td>
+                                    <td class="text-body-secondary">
+                                        #<?= htmlspecialchars($order['id']) ?>
+                                    </td>
 
-                            <td>
+                                    <td>
+                                        <?= date(
+                                            'd.m.Y H:i',
+                                            strtotime($order['created_at'])
+                                        ) ?>
+                                    </td>
 
-                                <?php
-                                $statusClass = match ($order['status']) {
-                                    'completed' => 'success',
-                                    'cancelled' => 'danger',
-                                    default => 'warning'
-                                };
-                                ?>
+                                    <td>
 
-                                <span class="badge bg-<?= $statusClass ?>">
-                                    <?= htmlspecialchars($order['status']) ?>
-                                </span>
+                                        <?php
+                                        $statusClass = match ($order['status']) {
+                                            'completed' => 'success',
+                                            'cancelled' => 'danger',
+                                            default => 'warning'
+                                        };
+                                        ?>
 
-                            </td>
+                                        <span class="badge text-bg-<?= $statusClass ?>">
+                                            <?= htmlspecialchars($order['status']) ?>
+                                        </span>
 
-                            <td>
-                                <?= number_format(
-                                    (float)$order['total_amount'],
-                                    2,
-                                    ',',
-                                    '.'
-                                ) ?> €
-                            </td>
+                                    </td>
 
-                            <td>
+                                    <td>
+                                        <?= number_format(
+                                            (float)$order['total_amount'],
+                                            2,
+                                            ',',
+                                            '.'
+                                        ) ?> €
+                                    </td>
 
-                                <a href="/order-success.php?order_id=<?= htmlspecialchars($order['id']) ?>"
-                                   class="btn btn-outline-primary btn-sm" target="_blank">
-                                    Details
-                                </a>
+                                    <td>
 
-                            </td>
+                                        <a href="/order-success.php?order_id=<?= htmlspecialchars($order['id']) ?>"
+                                           class="btn btn-outline-primary btn-sm" target="_blank">
+                                            Details
+                                        </a>
 
-                        </tr>
+                                    </td>
 
-                    <?php endforeach; ?>
+                                </tr>
 
-                </tbody>
+                            <?php endforeach; ?>
 
-            </table>
+                        </tbody>
 
+                    </table>
+
+                </div>
+            </div>
         </div>
 
     <?php endif; ?>

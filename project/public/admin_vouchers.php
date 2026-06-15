@@ -11,7 +11,7 @@ include_once VIEWS_PATH . '/layouts/header.php';
 include_once VIEWS_PATH . '/layouts/nav.php';
 
 // CONTENT
-include_once VIEWS_PATH . '/admin/voucher/voucher_page.php';
+include_once VIEWS_PATH . '/admin/admin_vouchers_page.php';
 //
 
 include_once VIEWS_PATH . '/layouts/footer.php';

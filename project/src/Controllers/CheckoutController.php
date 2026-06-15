@@ -4,8 +4,6 @@ class CheckoutController
 {
     public function checkCheckout(): void
     {
-        header('Content-Type: application/json');
-
         $checkoutService = new CheckoutService();
         $result = $checkoutService->checkCheckout();
 
@@ -15,8 +13,6 @@ class CheckoutController
 
     public function getData(): void
     {
-        header('Content-Type: application/json');
-
         $checkoutService = new CheckoutService();
         $result = $checkoutService->getCheckoutData();
 
@@ -26,8 +22,6 @@ class CheckoutController
 
     public function checkVoucher(): void
     {
-        header('Content-Type: application/json');
-
         $input = json_decode(file_get_contents('php://input'), true);
         $voucherCode = $input['voucher_code'] ?? '';
 
@@ -40,8 +34,6 @@ class CheckoutController
 
     public function placeOrder(): void
     {
-        header('Content-Type: application/json');
-
         $input = json_decode(file_get_contents('php://input'), true);
 
         $checkoutService = new CheckoutService();

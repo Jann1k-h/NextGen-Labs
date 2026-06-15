@@ -4,8 +4,6 @@ class CartController
 {
     public function add(): void
     {
-        header('Content-Type: application/json');
-
         $data = json_decode(file_get_contents("php://input"), true);
         $courseId = $data['course_id'];
 
@@ -18,8 +16,6 @@ class CartController
 
     public function get(): void
     {
-        header('Content-Type: application/json');
-
         $cartService = new CartService();
         $result = $cartService->getCart();
 
@@ -29,8 +25,6 @@ class CartController
 
     public function remove(): void
     {
-        header('Content-Type: application/json');
-
         $data = json_decode(file_get_contents("php://input"), true);
         $cartItemId = $data['cart_item_id'];
 

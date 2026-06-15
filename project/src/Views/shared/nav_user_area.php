@@ -1,13 +1,18 @@
 <?php
-// nav braucht Zugriff auf $_SESSION, obwohl bereits bei nav.php eingebunden, da diese datei aber separat per AJAX gelade wird und das ein neuer HTTP-Request ist bracuht mans
+// nav braucht Zugriff auf $_SESSION, obwohl bereits bei nav.php eingebunden,
+// da diese Datei separat per AJAX geladen wird und das ein neuer HTTP-Request ist.
 
-// keine requore config, da bereits in index geladen
+// Kein require config, da bereits in index geladen
 // require_once __DIR__ . '/../../Core/config.php';
 include_once CORE_PATH . '/session.php';
+
+$isLoggedIn = isset($_SESSION['user_id']);
+$isAdmin = !empty($_SESSION['is_admin']);
+$username = $_SESSION['username'] ?? '';
 ?>
 
 <!--
-In nav nur text, logik in nav_user_area
+In nav nur Text, Logik in nav_user_area
 
 ✅ Nur 1 Stelle für die Logik
 → keine doppelte HTML-Erzeugung (PHP + JS)
@@ -21,63 +26,79 @@ In nav nur text, logik in nav_user_area
 → später leicht erweiterbar (Cart, Admin, Notifications)
 -->
 
-<a class="btn btn-outline-primary btn-sm" href="/">Home</a>
+<div class="d-flex align-items-center gap-2 flex-wrap">
 
-<a href="#" 
-   id="cart-button-nav"
-   class="btn btn-outline-primary btn-sm position-relative" 
-   data-bs-toggle="offcanvas" 
-   data-bs-target="#cartOffcanvas">
-  <i class="bi bi-cart"></i>
+  <a class="btn btn-outline-primary btn-sm" href="/">
+    Home
+  </a>
 
-  <span id="cart-count"
-        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-    0
-  </span>
-</a>
+  <a href="#"
+     id="cart-button-nav"
+     class="btn btn-outline-primary btn-sm position-relative"
+     data-bs-toggle="offcanvas"
+     data-bs-target="#cartOffcanvas">
+    <i class="bi bi-cart"></i>
 
-<?php if (!isset($_SESSION['user_id'])): ?>
-  <span class="text-muted small">Nicht eingeloggt</span>
+    <span id="cart-count"
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      0
+    </span>
+  </a>
 
-  <button class="btn btn-outline-success btn-sm" id="login-button-nav" type="button">
-    Login
-  </button>
-<?php endif; ?>
+  <?php if (!$isLoggedIn): ?>
 
-<?php if (isset($_SESSION['user_id'])): ?>
-  <span class="fw-semibold small">
-    Name: <?= $_SESSION['username'] ?>
-  </span>
+    <span class="text-body-secondary small">
+      Nicht eingeloggt
+    </span>
 
-  <?php if (!empty($_SESSION['is_admin'])): ?>
+    <button class="btn btn-outline-primary btn-sm" id="login-button-nav" type="button">
+      Login
+    </button>
+
+  <?php else: ?>
+
     <div class="dropdown">
-      <button class="btn btn-outline-danger btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-        Admin
+      <button class="btn btn-outline-primary btn-sm dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+        Konto
       </button>
 
       <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="admin_courses.php">Kurse</a></li>
-        <li><a class="dropdown-item" href="admin_customers.php">Kunden</a></li>
-        <li><a class="dropdown-item" href="admin_vouchers.php">Gutscheine</a></li>
+        <li><a class="dropdown-item" href="orders.php">Bestellhistorie</a></li>
+        <li><a class="dropdown-item" href="account.php">Konto verwalten</a></li>
       </ul>
     </div>
-  <?php endif; ?>
 
-  <?php if (isset($_SESSION['user_id'])): ?>
-  <div class="dropdown">
-    <button class="btn btn-outline-info btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-      Konto
+    <?php if ($isAdmin): ?>
+      <div class="dropdown">
+        <button class="btn btn-outline-primary btn-sm dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+          Admin
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="admin_courses.php">Kurse</a></li>
+          <li><a class="dropdown-item" href="admin_customers.php">Kunden</a></li>
+          <li><a class="dropdown-item" href="admin_vouchers.php">Gutscheine</a></li>
+        </ul>
+      </div>
+    <?php endif; ?>
+
+    <span class="text-body-secondary small">
+      Name:
+      <span class="fw-semibold text-body">
+        <?= htmlspecialchars($username) ?>
+      </span>
+    </span>
+
+    <button class="btn btn-outline-primary btn-sm" id="logout-button-nav" type="button">
+      Logout
     </button>
 
-    <ul class="dropdown-menu dropdown-menu-end">
-      <li><a class="dropdown-item" href="orders.php">Bestellhistorie</a></li>
-      <li><a class="dropdown-item" href="account.php">Konto verwalten</a></li>
-    </ul>
-  </div>
-<?php endif; ?>
+  <?php endif; ?>
 
-  <button class="btn btn-outline-success btn-sm" id="logout-button-nav" type="button">
-    Logout
-  </button>
-
-<?php endif; ?>
+</div>

@@ -27,8 +27,12 @@ require_once REPOSITORIES_PATH . '/AdminCustomerRepository.php';
 // Services
 require_once SERVICES_PATH . '/AuthService.php';
 require_once SERVICES_PATH . '/CartService.php';
+require_once SERVICES_PATH . '/CourseService.php';
 require_once SERVICES_PATH . '/CheckoutService.php';
 require_once SERVICES_PATH . '/VoucherService.php';
+require_once SERVICES_PATH . '/AccountService.php';
+require_once SERVICES_PATH . '/AdminCourseService.php';
+require_once SERVICES_PATH . '/AdminCustomerService.php';
 
 // Controllers
 require_once CONTROLLERS_PATH . '/AuthController.php';

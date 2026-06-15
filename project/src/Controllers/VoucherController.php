@@ -24,8 +24,6 @@ class VoucherController
     // Alle Gutscheine laden
     public function get(): void
     {
-        header('Content-Type: application/json');
-
         if (!$this->requireAdmin()) {
             return;
         }
@@ -45,8 +43,6 @@ class VoucherController
     // Gutschein erstellen
     public function create(): void
     {
-        header('Content-Type: application/json');
-
         if (!$this->requireAdmin()) {
             return;
         }
@@ -74,8 +70,6 @@ class VoucherController
     // Gutschein bearbeiten
     public function update(): void
     {
-        header('Content-Type: application/json');
-
         if (!$this->requireAdmin()) {
             return;
         }
@@ -106,8 +100,6 @@ class VoucherController
     // Gutschein löschen
     public function delete(): void
     {
-        header('Content-Type: application/json');
-
         if (!$this->requireAdmin()) {
             return;
         }

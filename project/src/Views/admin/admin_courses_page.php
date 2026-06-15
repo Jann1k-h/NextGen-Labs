@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="mb-1">Kurse verwalten</h1>
-            <p class="text-muted mb-0">Erstelle, bearbeite und deaktiviere Kurse im Kursangebot.</p>
+            <p class="text-body-secondary mb-0">Erstelle, bearbeite und deaktiviere Kurse im Kursangebot.</p>
         </div>
 
         <button type="button" id="open-create-course-modal-btn" class="btn btn-primary rounded-pill">
@@ -12,15 +12,15 @@
     </div>
 
     <!-- Kurs Liste Card -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-white">
+    <div class="card border shadow-sm">
+        <div class="card-header">
             <h5 class="mb-0">Bestehende Kurse</h5>
         </div>
 
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Bild</th>

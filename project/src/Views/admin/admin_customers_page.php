@@ -3,20 +3,20 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="mb-1">Kunden verwalten</h1>
-            <p class="text-muted mb-0">Kundenkonten anzeigen, deaktivieren und Bestellungen einsehen.</p>
+            <p class="text-body-secondary mb-0">Kundenkonten anzeigen, deaktivieren und Bestellungen einsehen.</p>
         </div>
     </div>
 
     <!-- Kunden Liste Card -->
     <div class="card shadow-sm">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Kundenliste</h5>
         </div>
 
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
@@ -47,7 +47,7 @@
             <div class="modal-header">
                 <div>
                     <h5 class="modal-title" id="customerOrdersModalLabel">Bestellungen anzeigen</h5>
-                    <div class="text-muted small" id="customer-orders-subtitle"></div>
+                    <div class="text-body-secondary small" id="customer-orders-subtitle"></div>
                 </div>
 
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>

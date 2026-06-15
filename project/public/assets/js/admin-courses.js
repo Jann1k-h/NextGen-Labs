@@ -39,7 +39,7 @@ function loadAdminCourseCategories() {
       if (data.success) {
         data.categories.forEach(category => {
           $('#course-category-id').append(`
-            <option value="${category.id}">${category.name}</option>
+            <option value="${category.id}">${escapeHtml(category.name)}</option>
           `);
         });
       }
@@ -56,7 +56,7 @@ function renderAdminCourses(courses) {
   if (courses.length === 0) {
     $('#admin-course-list').html(`
       <tr>
-        <td colspan="8" class="text-muted text-center py-4">
+        <td colspan="8" class="text-secondary text-center py-4">
           Keine Kurse vorhanden.
         </td>
       </tr>
@@ -65,45 +65,55 @@ function renderAdminCourses(courses) {
   }
 
   courses.forEach(course => {
+    const courseImage = course.course_image
+      ? `
+        <img src="${course.course_image}" 
+             alt="${escapeHtml(course.course_image_alt ?? '')}" 
+             style="width: 80px; height: 55px; object-fit: cover;" 
+             class="img-thumbnail">
+      `
+      : '<span class="text-body-secondary">-</span>';
+
+    const activeBadge = course.is_active == 1
+      ? '<span class="badge text-bg-success">Aktiv</span>'
+      : '<span class="badge text-bg-secondary">Inaktiv</span>';
+
     $('#admin-course-list').append(`
       <tr>
-        <td>${course.id}</td>
+        <td class="text-body-secondary">${course.id}</td>
 
         <td>
-          ${course.course_image ? `
-            <img src="${course.course_image}" 
-                 alt="${course.course_image_alt ?? ''}" 
-                 style="width: 80px; height: 55px; object-fit: cover;" 
-                 class="rounded">
-          ` : '-'}
+          ${courseImage}
         </td>
 
-        <td>${course.title}</td>
-        <td>${course.category_name ?? '-'}</td>
+        <td class="fw-semibold">${escapeHtml(course.title)}</td>
+        <td>${escapeHtml(course.category_name ?? '-')}</td>
         <td>${Number(course.price).toFixed(2)} €</td>
         <td>${course.stock}</td>
-        <td>${course.is_active == 1 ? 'Ja' : 'Nein'}</td>
+        <td>${activeBadge}</td>
 
         <td>
-          <button class="btn btn-sm btn-outline-primary edit-course-btn"
-                  data-id="${course.id}"
-                  data-category-id="${course.category_id}"
-                  data-title="${escapeHtml(course.title)}"
-                  data-description="${escapeHtml(course.description ?? '')}"
-                  data-price="${course.price}"
-                  data-rating="${course.rating ?? ''}"
-                  data-stock="${course.stock}"
-                  data-lecturer-name="${escapeHtml(course.lecturer_name ?? '')}"
-                  data-lecturer-contact="${escapeHtml(course.lecturer_contact ?? '')}"
-                  data-alt-text="${escapeHtml(course.course_image_alt ?? '')}"
-                  data-is-active="${course.is_active}">
-            Bearbeiten
-          </button>
+          <div class="btn-group btn-group-sm" role="group" aria-label="Kurs Aktionen">
+            <button class="btn btn-outline-primary edit-course-btn"
+                    data-id="${course.id}"
+                    data-category-id="${course.category_id}"
+                    data-title="${escapeHtml(course.title)}"
+                    data-description="${escapeHtml(course.description ?? '')}"
+                    data-price="${course.price}"
+                    data-rating="${course.rating ?? ''}"
+                    data-stock="${course.stock}"
+                    data-lecturer-name="${escapeHtml(course.lecturer_name ?? '')}"
+                    data-lecturer-contact="${escapeHtml(course.lecturer_contact ?? '')}"
+                    data-alt-text="${escapeHtml(course.course_image_alt ?? '')}"
+                    data-is-active="${course.is_active}">
+              Bearbeiten
+            </button>
 
-          <button class="btn btn-sm btn-outline-danger delete-course-btn"
-                  data-id="${course.id}">
-            Deaktiveren
-          </button>
+            <button class="btn btn-outline-danger delete-course-btn"
+                    data-id="${course.id}">
+              Deaktivieren
+            </button>
+          </div>
         </td>
       </tr>
     `);

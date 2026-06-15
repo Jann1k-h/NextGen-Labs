@@ -6,7 +6,6 @@ class AuthController
 {
     public function login(): void
     {
-
         // data enthält die Daten, die der Client im JSON-Format gesendet hat, also z.B. identifier, password und rememberMe
         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -24,7 +23,6 @@ class AuthController
 
     public function register(): void
     {
-
         // data enthält die Daten, die der Client im JSON-Format gesendet hat, also z.B. identifier, password und rememberMe
         $data = json_decode(file_get_contents("php://input"), true);
 

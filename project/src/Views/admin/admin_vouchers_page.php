@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="mb-1">Gutscheine verwalten</h1>
-            <p class="text-muted mb-0">Erstelle, bearbeite und lösche Gutscheincodes.</p>
+            <p class="text-body-secondary mb-0">Erstelle, bearbeite und lösche Gutscheincodes.</p>
         </div>
 
         <button type="button" id="open-create-voucher-modal-btn" class="btn btn-primary rounded-pill">
@@ -13,14 +13,14 @@
 
     <!-- Gutschein Liste Card -->
     <div class="card shadow-sm">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Bestehende Gutscheine</h5>
         </div>
 
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Code</th>

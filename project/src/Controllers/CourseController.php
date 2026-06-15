@@ -4,74 +4,46 @@ class CoursesController
 {
     public function getDetails(): void
     {
-        // Daten kommen aus der URL
-        header('Content-Type: application/json');
-
         $courseId = $_GET['id'] ?? null;
-
-        if (!$courseId) {
-            http_response_code(400);
-            echo json_encode([
-                'success' => false,
-                'message' => 'Keine Kurs-ID angegeben'
-            ]);
-            exit;
-        }
-
         $isLoggedIn = isset($_SESSION['user_id']);
 
-        $courseRepository = new CourseRepository();
-        $course = $courseRepository->getCourseById($courseId, $isLoggedIn);
+        $courseService = new CourseService();
+        $result = $courseService->getDetails($courseId, $isLoggedIn);
 
-        if (!$course) {
-            http_response_code(404);
-            echo json_encode([
-                'success' => false,
-                'message' => 'Kurs nicht gefunden'
-            ]);
-            exit;
+        if (!$result['success']) {
+            http_response_code($result['status']);
         }
 
-        echo json_encode($course);
+        echo json_encode($result['data']);
     }
 
     public function getCategories(): void
     {
-        header('Content-Type: application/json');
+        $courseService = new CourseService();
 
-        $courseRepository = new CourseRepository();
-        $categories = $courseRepository->getCategories();
-
-        echo json_encode($categories);
+        echo json_encode($courseService->getCategories());
     }
 
     public function getCourses(): void
     {
-        header('Content-Type: application/json');
-
         $isLoggedIn = isset($_SESSION['user_id']);
         $categoryId = $_GET['category_id'] ?? null;
         $onlyFree = $_GET['free'] ?? 'false';
 
-        $courseRepository = new CourseRepository();
-        $courses = $courseRepository->getCourses($isLoggedIn, $categoryId, $onlyFree);
+        $courseService = new CourseService();
 
-        echo json_encode($courses);
+        echo json_encode($courseService->getCourses($isLoggedIn, $categoryId, $onlyFree));
     }
 
-    // Sucht Kurse basierend auf Suchbegriff, Kategorie und "nur freie Kurse"-Filter
     public function search(): void
     {
-        header('Content-Type: application/json');
-
         $query = $_GET['query'] ?? '';
         $categoryId = $_GET['category_id'] ?? '';
         $onlyFree = isset($_GET['free']) && $_GET['free'] === 'true';
         $isLoggedIn = isset($_SESSION['user_id']);
 
-        $courseRepository = new CourseRepository();
-        $courses = $courseRepository->searchCourses($query, $categoryId, $onlyFree, $isLoggedIn);
+        $courseService = new CourseService();
 
-        echo json_encode($courses);
+        echo json_encode($courseService->searchCourses($query, $categoryId, $onlyFree, $isLoggedIn));
     }
 }
