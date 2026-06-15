@@ -1,21 +1,7 @@
 <?php
 
-class AdminCustomerController
+class AdminCustomerController extends BaseController
 {
-    private function requireAdmin(): bool
-    {
-        if (!isset($_SESSION['user_id']) || (int)($_SESSION['is_admin'] ?? 0) !== 1) {
-            http_response_code(403);
-            echo json_encode([
-                'success' => false,
-                'message' => 'Keine Berechtigung.'
-            ]);
-            return false;
-        }
-
-        return true;
-    }
-
     public function get(): void
     {
         if (!$this->requireAdmin()) {

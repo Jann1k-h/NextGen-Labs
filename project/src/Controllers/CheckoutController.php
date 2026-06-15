@@ -1,6 +1,6 @@
 <?php
 
-class CheckoutController
+class CheckoutController extends BaseController
 {
     public function checkCheckout(): void
     {
