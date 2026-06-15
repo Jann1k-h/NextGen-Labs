@@ -75,7 +75,10 @@ function updateCartTotal(total) {
 
 // --------------------------------------------------
 // Button Events
+// --------------------------------------------------
 
+
+// --------------------------------------------------
 // Add-to-Cart Button bei den Kursen
 $(document).on('click', '.add-to-cart-btn', function () {
   const courseId = $(this).data('id');
@@ -90,19 +93,28 @@ $(document).on('click', '.add-to-cart-btn', function () {
     }
   });
 });
+// --------------------------------------------------
 
+
+// --------------------------------------------------
 // Warenkorb-Button in der Navigation
 $(document).on('click', '#cart-button-nav', function () {
   loadCartItems();
 });
+// --------------------------------------------------
 
+
+// --------------------------------------------------
 // Remove Button im Warenkorb
 $(document).on('click', '.remove-cart-item-btn', function () {
   const cartItemId = $(this).data('id');
 
   removeCartItem(cartItemId);
 });
+// --------------------------------------------------
 
+
+// --------------------------------------------------
 // Button "Zur Kasse"
 $(document).on('click', '#checkout-btn', function () {
   goToCheckout();
@@ -116,6 +128,7 @@ function openCartOverlay() {
   bootstrap.Offcanvas.getOrCreateInstance('#cartOffcanvas').show();
 }
 // --------------------------------------------------
+
 
 // --------------------------------------------------
 // Funktion Kurs zum Warenkorb hinzufügen

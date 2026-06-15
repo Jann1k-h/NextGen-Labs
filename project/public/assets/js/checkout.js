@@ -2,6 +2,9 @@
 // Checkout UI + Daten laden
 // --------------------------------------------------
 
+
+// --------------------------------------------------
+// Beim Laden der Seite Checkout-Daten laden
 $(document).ready(function () {
 
   // Nur wenn Checkout-Element vorhanden ist, Daten laden, damit nicht die ganze Zeit Alert "Ihr Warenkorb ist leer" kommt
@@ -11,7 +14,11 @@ $(document).ready(function () {
 
   loadCheckoutData();
 });
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Checkout-Daten laden
 function loadCheckoutData() {
   getCheckoutDataRequest()
     .then(data => {
@@ -23,6 +30,8 @@ function loadCheckoutData() {
       renderCheckoutDetails(data);
     })
 }
+// --------------------------------------------------
+
 
 // --------------------------------------------------
 // Gutschein prüfen
@@ -46,6 +55,8 @@ $(document).on('click', '#check-voucher-btn', function () {
       }
     });
 });
+// --------------------------------------------------
+
 
 // --------------------------------------------------
 // Bestellung abschließen
@@ -85,14 +96,19 @@ $(document).on('click', '#place-order-btn', function () {
 // --------------------------------------------------
 
 
-// Hilfsfunktionen zum Rendern und Anzeigen von Nachrichten
+// --------------------------------------------------
+// Gutschein UI Nachrichten
 function showVoucherMessage(message, isSuccess) {
   $('#voucher-message')
     .text(message)
     .removeClass('text-success text-danger')
     .addClass(isSuccess ? 'text-success' : 'text-danger');
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Gutschein zurücksetzen
 function resetVoucherDiscount() {
   $('#checkout-discount-row').addClass('d-none');
   $('#checkout-discount-amount').text('-0.00 €');
@@ -100,7 +116,11 @@ function resetVoucherDiscount() {
   const subtotal = Number($('#checkout-subtotal').text().replace('€', '').trim());
   $('#checkout-final-total').text(subtotal.toFixed(2) + ' €');
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Gutschein anwenden
 function updateVoucherDiscount(data) {
   $('#checkout-subtotal').text(Number(data.subtotal).toFixed(2) + ' €');
   $('#checkout-discount-row').removeClass('d-none');
@@ -109,6 +129,9 @@ function updateVoucherDiscount(data) {
 }
 // --------------------------------------------------
 
+
+// --------------------------------------------------
+// Checkout Details rendern
 // Wichtig: das vorausfüllen bereits gespeicherter daten passiert erst am Ende der Funktion
 function renderCheckoutDetails(data) {
   const user = data.user;
@@ -288,7 +311,11 @@ function renderCheckoutDetails(data) {
   $('#billing_email').val(user.email ?? '');
   $('#payment_method').val(user.payment_info ?? '');
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Checkout Items rendern
 function renderCheckoutItems(items, user) {
   if (items.length === 0) {
     return `
@@ -347,7 +374,11 @@ function renderCheckoutItems(items, user) {
 
   return html;
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Bestellüberischt rendern
 function renderOrderSummary(items) {
   if (items.length === 0) {
     return `
@@ -379,3 +410,4 @@ function renderOrderSummary(items) {
 
   return html;
 }
+// --------------------------------------------------

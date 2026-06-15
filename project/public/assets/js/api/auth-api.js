@@ -1,3 +1,10 @@
+// --------------------------------------------------
+// Auth API Requests
+// --------------------------------------------------
+
+
+// --------------------------------------------------
+// Benutzer anmelden
 function loginRequest(identifier, password, rememberMe) {
     return fetch('/api/serviceHandler.php?module=auth&action=login', {
         method: 'POST',
@@ -16,7 +23,11 @@ function loginRequest(identifier, password, rememberMe) {
         return JSON.parse(text);
     });
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Benutzer registieren
 function registerRequest(title, firstname, lastname, username, address, zipcode, city, email, password, confirmPassword, paymentInfo) {
     return fetch('/api/serviceHandler.php?module=auth&action=register', {
         method: 'POST',
@@ -41,7 +52,11 @@ function registerRequest(title, firstname, lastname, username, address, zipcode,
         return JSON.parse(text);
     });
 }
+// --------------------------------------------------
 
+
+// --------------------------------------------------
+// Benutzer abmelden
 function logoutRequest() {
     return fetch('/api/serviceHandler.php?module=auth&action=logout', {
         method: 'POST'
@@ -50,3 +65,4 @@ function logoutRequest() {
         return JSON.parse(text);
     });
 }
+// --------------------------------------------------
