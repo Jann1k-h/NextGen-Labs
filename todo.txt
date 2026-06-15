@@ -1,6 +1,0 @@
-Webentwicklungsprojekt_NextGen-Labs/
-
-Sagen:
-wir haben komplett frontend von backend getrennt, also jeglicher zugriff, ua reloaduser area, passiert über api endpunkt serviceHandler
-
-beim bestellen werden vom user snapshots von daten gemacht, da diese sich ändern können

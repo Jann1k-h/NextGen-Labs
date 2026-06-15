@@ -2,7 +2,8 @@
 
 class AuthRepository
 {
-
+    // --------------------------------------------------
+    // Benutzer anhand Username oder Email laden
     public function findByIdentifier(string $identifier): ?array
     {
         $pdo = getDB();
@@ -21,7 +22,11 @@ class AuthRepository
 
         return $userData ?: null;
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Remeber Token aktualisieren
     public function updateRememberToken(int $userId, ?string $token, ?string $expires): void
     {
         $pdo = getDB();
@@ -38,7 +43,11 @@ class AuthRepository
             'user_id' => $userId
         ]);
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Neuen Benutzer erstellen
     public function createUser($title, $firstname, $lastname, $username, $address, $zipcode, $city, $email, $hashedPassword, $paymentInfo): void
     {
         $pdo = getDB();
@@ -61,4 +70,5 @@ class AuthRepository
             'payment_info' => $paymentInfo
         ]);
     }
+    // --------------------------------------------------
 }

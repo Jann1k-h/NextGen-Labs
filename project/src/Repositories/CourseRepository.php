@@ -2,7 +2,8 @@
 
 class CourseRepository
 {
-    
+    // --------------------------------------------------
+    // Kurs anhand ID Laden
     public function getCourseById($courseId, bool $isLoggedIn): ?array
     {
         $pdo = getDB();
@@ -17,7 +18,7 @@ class CourseRepository
                 courses.stock,
         ";
 
-        if ($isLoggedIn) {
+        if ($isLoggedIn) { // nur mit Login Einsicht möglich
             $sql .= "
                 courses.lecturer_name AS lecturer_name,
                 courses.lecturer_contact AS lecturer_contact,
@@ -60,7 +61,11 @@ class CourseRepository
 
         return $course;
     }
+    // --------------------------------------------------
 
+    
+    // --------------------------------------------------
+    // Alle Kategorien laden
     public function getCategories(): array
     {
         $pdo = getDB();
@@ -130,9 +135,12 @@ class CourseRepository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    // --------------------------------------------------
 
-    // Funktion für Live-Suche nach Kursen
-    // Unterstützt Suchbegriff, Kategorie und nur freie Kurse
+
+    // --------------------------------------------------
+    // Live-Suche für Kurse
+    // Möglich mit Suchbegriff, Kategorie und nur freie Kurse
     public function searchCourses($query, $categoryId, $onlyFree, bool $isLoggedIn): array
     {
         $pdo = getDB();
@@ -205,4 +213,5 @@ class CourseRepository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    // --------------------------------------------------
 }

@@ -12,18 +12,12 @@ $username = $_SESSION['username'] ?? '';
 ?>
 
 <!--
-In nav nur Text, Logik in nav_user_area
-
-✅ Nur 1 Stelle für die Logik
-→ keine doppelte HTML-Erzeugung (PHP + JS)
-✅ Immer korrekte UI
-→ basiert auf $_SESSION (Server = Wahrheit)
-✅ Kein kompletter Reload nötig
-→ nur #user-area wird neu geladen
-✅ Einfach wartbar
-→ Änderungen nur in einer Datei
-✅ Skalierbar
-→ später leicht erweiterbar (Cart, Admin, Notifications)
+In nav nur Text, Logik in nav_user_area:
+  - Nur 1 Stelle für die Logik → keine doppelte HTML-Erzeugung (PHP + JS)
+  - Immer korrekte UI → basiert auf $_SESSION (Server = Wahrheit)
+  - Kein kompletter Reload nötig → nur #user-area wird neu geladen
+  - Einfach wartbar → Änderungen nur in einer Datei
+  - Skalierbar → später leicht erweiterbar (Cart, Admin, Notifications)
 -->
 
 <div class="d-flex align-items-center gap-2 flex-wrap">

@@ -2,6 +2,8 @@
 
 class OrderRepository
 {
+    // --------------------------------------------------
+    // Bestellung erstellen
     public function createOrder(array $data): int
     {
         $pdo = getDB();
@@ -66,7 +68,11 @@ class OrderRepository
 
         return (int)$pdo->lastInsertId();
     }
+    // --------------------------------------------------
 
+    
+    // --------------------------------------------------
+    // Bestellposition (Order Item) erstellen
     public function createOrderItem(array $data): void
     {
         $pdo = getDB();
@@ -102,7 +108,11 @@ class OrderRepository
             'course_for' => $data['course_for']
         ]);
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Bestellung + Positionen laden (User)
     public function getOrderDetailsById(int $orderId, int $userId): ?array
     {
         $pdo = getDB();
@@ -162,7 +172,11 @@ class OrderRepository
             'items' => $items
         ];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Alle Bestellungen eines Users laden
     public function getOrdersByUserId(int $userId): array
     {
         $pdo = getDB();
@@ -186,4 +200,5 @@ class OrderRepository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    // --------------------------------------------------
 }

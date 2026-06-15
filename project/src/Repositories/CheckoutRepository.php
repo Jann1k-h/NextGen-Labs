@@ -2,6 +2,8 @@
 
 class CheckoutRepository
 {
+    // --------------------------------------------------
+    // Checkout-Daten anhand User-ID laden    
     public function getCheckoutDataById(int $userId): ?array
     {
         $pdo = getDB();
@@ -31,5 +33,5 @@ class CheckoutRepository
 
         return $user ?: null;
     }
-
+    // --------------------------------------------------
 }

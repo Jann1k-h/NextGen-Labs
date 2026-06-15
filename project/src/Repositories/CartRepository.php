@@ -2,6 +2,8 @@
 
 class CartRepository
 {
+    // --------------------------------------------------
+    // Prüfen, ob der Kurs exisitiert und verfügbar ist
     public function isCourseAvailable(int $courseId): bool
     {
         $pdo = getDB();
@@ -30,7 +32,11 @@ class CartRepository
 
         return true;
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Prüfen, ob Kurs bereits im Warenkorb ist (User)
     public function existsForUser(int $userId, int $courseId): bool
     {
         $pdo = getDB();
@@ -56,7 +62,11 @@ class CartRepository
             return false;
         }
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Prüfen, ob Kurs bereits im Warenkorb ist (Gast)
     public function existsForGuest(string $guestToken, int $courseId): bool
     {
         $pdo = getDB();
@@ -82,7 +92,11 @@ class CartRepository
             return false;
         }
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Kurs zum Warenkorb hinzufügen (User)
     public function addForUser(int $userId, int $courseId): void
     {
         $pdo = getDB();
@@ -99,7 +113,11 @@ class CartRepository
             'course_id' => $courseId
         ]);
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Kurs zum Warenkorb hinzugefügen (Gast)
     public function addForGuest(string $guestToken, int $courseId): void
     {
         $pdo = getDB();
@@ -116,7 +134,11 @@ class CartRepository
             'course_id' => $courseId
         ]);
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Warenkorb laden (User)
     public function getByUser(int $userId): array
     {
         $pdo = getDB();
@@ -156,7 +178,11 @@ class CartRepository
             return $getByUser;
         }
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Warenkorb laden (Gast)
     public function getByGuest(string $guestToken): array
     {
         $pdo = getDB();
@@ -196,7 +222,11 @@ class CartRepository
             return $getByGuest;
         }
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Nur Kurs-IDs im Warenkorb (Gast)
     public function getGuestItems(string $guestToken): array
     {
         $pdo = getDB();
@@ -219,7 +249,11 @@ class CartRepository
             return $getGuestItems;
         }
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Warenkorb Summe (User)
     public function calculateTotalByUser(int $userId): float
     {
         $pdo = getDB();
@@ -243,7 +277,11 @@ class CartRepository
 
         return (float)$result['total'];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Warenkorb Summe (Gast)
     public function calculateTotalByGuest(string $guestToken): float
     {
         $pdo = getDB();
@@ -267,7 +305,11 @@ class CartRepository
 
         return (float)$result['total'];
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Gast-Warenkorb löschen
     public function deleteGuestCart(string $guestToken): void
     {
         $pdo = getDB();
@@ -281,7 +323,11 @@ class CartRepository
             'guest_token' => $guestToken
         ]);
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Item entfernen (User)
     public function removeForUser(int $userId, int $cartItemId): void
     {
         $pdo = getDB();
@@ -297,7 +343,11 @@ class CartRepository
             'user_id' => $userId
         ]);
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Item entfernen (Gast)
     public function removeForGuest(string $guestToken, int $cartItemId): void
     {
         $pdo = getDB();
@@ -313,8 +363,11 @@ class CartRepository
             'guest_token' => $guestToken
         ]);
     }
+    // --------------------------------------------------
 
 
+    // --------------------------------------------------
+    // Warenkorb leeren (User)
     public function clearForUser(int $userId): void
     {
         $pdo = getDB();
@@ -328,7 +381,11 @@ class CartRepository
             'user_id' => $userId
         ]);
     }
+    // --------------------------------------------------
 
+
+    // --------------------------------------------------
+    // Kursbestand reduzieren
     public function reduceCourseStock(int $courseId, int $quantity): void
     {
         $pdo = getDB();
@@ -345,4 +402,5 @@ class CartRepository
             'quantity' => $quantity
         ]);
     }
+    // --------------------------------------------------
 }
