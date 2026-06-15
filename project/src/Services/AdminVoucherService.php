@@ -1,13 +1,13 @@
 <?php
 
-class VoucherService
+class AdminVoucherService
 {
     // --------------------------------------------------
     // Alle Gutscheine laden
     public function getAllVouchers(): array
     {
-        $voucherRepository = new VoucherRepository();
-        return $voucherRepository->findAll();
+        $adminVoucherRepository = new AdminVoucherRepository();
+        return $adminVoucherRepository->findAll();
     }
     // --------------------------------------------------
 
@@ -16,8 +16,8 @@ class VoucherService
     // Gutschein für Checkout prüfen
     public function checkVoucherForCheckout(string $code): array
     {
-        $voucherRepository = new VoucherRepository();
-        $voucher = $voucherRepository->findByCode($code);
+        $adminVoucherRepository = new AdminVoucherRepository();
+        $voucher = $adminVoucherRepository->findByCode($code);
 
         if (!$voucher) {
             return [
@@ -97,9 +97,9 @@ class VoucherService
             return $validation;
         }
 
-        $voucherRepository = new VoucherRepository();
+        $adminVoucherRepository = new AdminVoucherRepository();
 
-        if ($voucherRepository->existsByCode($data['code'])) {
+        if ($adminVoucherRepository->existsByCode($data['code'])) {
             return [
                 'success' => false,
                 'message' => 'Dieser Gutscheincode existiert bereits.'
@@ -116,7 +116,7 @@ class VoucherService
             'is_active' => isset($data['is_active']) ? (int)$data['is_active'] : 1
         ];
 
-        $voucherRepository->create($voucherData);
+        $adminVoucherRepository->create($voucherData);
 
         return [
             'success' => true,
@@ -130,8 +130,8 @@ class VoucherService
     // Gutschein bearbeiten
     public function updateVoucher(int $id, array $data): array
     {
-        $voucherRepository = new VoucherRepository();
-        $existingVoucher = $voucherRepository->findById($id);
+        $adminVoucherRepository = new AdminVoucherRepository();
+        $existingVoucher = $adminVoucherRepository->findById($id);
 
         if (!$existingVoucher) {
             return [
@@ -146,7 +146,7 @@ class VoucherService
             return $validation;
         }
 
-        if ($voucherRepository->existsByCodeExceptId($data['code'], $id)) {
+        if ($adminVoucherRepository->existsByCodeExceptId($data['code'], $id)) {
             return [
                 'success' => false,
                 'message' => 'Dieser Gutscheincode wird bereits verwendet.'
@@ -163,7 +163,7 @@ class VoucherService
             'is_active' => isset($data['is_active']) ? (int)$data['is_active'] : 1
         ];
 
-        $voucherRepository->update($id, $voucherData);
+        $adminVoucherRepository->update($id, $voucherData);
 
         return [
             'success' => true,
@@ -177,8 +177,8 @@ class VoucherService
     // Gutschein löschen
     public function deleteVoucher(int $id): array
     {
-        $voucherRepository = new VoucherRepository();
-        $existingVoucher = $voucherRepository->findById($id);
+        $adminVoucherRepository = new AdminVoucherRepository();
+        $existingVoucher = $adminVoucherRepository->findById($id);
 
         if (!$existingVoucher) {
             return [
@@ -187,7 +187,7 @@ class VoucherService
             ];
         }
 
-        $voucherRepository->delete($id);
+        $adminVoucherRepository->delete($id);
 
         return [
             'success' => true,

@@ -10,7 +10,7 @@ class VoucherController extends BaseController
             return;
         }
 
-        $voucherService = new VoucherService();
+        $voucherService = new AdminVoucherService();
         $vouchers = $voucherService->getAllVouchers();
 
         echo json_encode([
@@ -40,7 +40,7 @@ class VoucherController extends BaseController
             return;
         }
 
-        $voucherService = new VoucherService();
+        $voucherService = new AdminVoucherService();
         $result = $voucherService->createVoucher($data);
 
         echo json_encode($result);
@@ -70,7 +70,7 @@ class VoucherController extends BaseController
         $id = (int)$data['id'];
         unset($data['id']);
 
-        $voucherService = new VoucherService();
+        $voucherService = new AdminVoucherService();
         $result = $voucherService->updateVoucher($id, $data);
 
         echo json_encode($result);
@@ -97,7 +97,7 @@ class VoucherController extends BaseController
             return;
         }
 
-        $voucherService = new VoucherService();
+        $voucherService = new AdminVoucherService();
         $result = $voucherService->deleteVoucher((int)$data['id']);
 
         echo json_encode($result);
