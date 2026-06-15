@@ -3,6 +3,12 @@
 // --------------------------------------------------
 
 $(document).ready(function () {
+
+  // Nur wenn Checkout-Element vorhanden ist, Daten laden, damit nicht die ganze Zeit Alert "Ihr Warenkorb ist leer" kommt
+  if ($('#checkout-details').length === 0) {
+    return;
+  }
+
   loadCheckoutData();
 });
 
